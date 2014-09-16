@@ -1,0 +1,90 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+    <link href="../../Content/jquery-easyui-1.4/themes/metro/easyui.css" rel="stylesheet" type="text/css" />
+    <link href="../../Content/jquery-easyui-1.4/themes/icon.css" rel="stylesheet" type="text/css" />
+    <link href="../../Content/jquery-easyui-1.4/demo/demo.css" rel="stylesheet" type="text/css" />
+    <script src="../../Content/jquery-easyui-1.4/jquery.min.js" type="text/javascript"></script>
+    <script src="../../Content/jquery-easyui-1.4/jquery.easyui.min.js" type="text/javascript"></script>
+    <script src="../../Content/jquery-easyui-1.4/locale/easyui-lang-zh_CN.js" type="text/javascript"></script>
+    <script src="../../Content/jquery-easyui-1.4/locale/easyui-lang-zh_TW.js" type="text/javascript"></script>
+    
+    <script type="text/javascript">
+        function ajaxRequest() {
+            $.ajax(
+            {
+                url: "../../generalHandler/loginproc.ashx",
+                type: "GET",
+                success: function (data, status) {
+                    alert(data);
+                }
+            });
+        }   
+    </script>
+</head>
+
+<body>
+    
+    <table id="tt" title="管理员设置" class="easyui-datagrid" style="width: auto; height: 400px;"        
+        idfield="itemid" pagination="true" data-options="iconCls:'icon-save',rownumbers:true,url:'SetAdmin.ashx/ProcessRequest',pageSize:5, pageList:[5,10,15,20],method:'get',toolbar:'#tb',striped:true" fitcolumns="true"> <%--striped="true"--%>
+        <%-- 表格标题--%>
+        <thead>
+            <tr>
+                <th data-options="field:'AdminID',checkbox:true"></th>
+                <th data-options="field:'AdminName',width:100">用户名</th>
+                <th data-options="field:'AdminPassword',width:120,align:'right'">密码</th>
+                <th data-options="field:'AdminRightName',width:120,align:'right'">权限</th>
+                <th data-options="field:'ActiveDate',width:100">时间</th>               
+            </tr>
+        </thead>
+         <%--表格内容--%>
+    </table>
+    <%--功能区--%>
+    <div id="tb" style="padding: 5px; height: auto">
+        <%-- 包括添加管理员，修改、删除管理员 --%>
+        <div style="margin-bottom: 5px">
+            <a href="javascript:void(0)" onclick="newUser()" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true"></a>
+            <a href="javascript:void(0)" onclick="editUser() " class="easyui-linkbutton" data-options="iconCls:'icon-edit',plain:true"></a>
+            <a href="javascript:void(0)" onclick="removeUser()" class="easyui-linkbutton" data-options="iconCls:'icon-remove',plain:true"></a>
+        </div>
+        <%-- 查找管理员信息，根据时间、管理员名 --%>
+        <div>
+            时间从:
+            <input id="StartTime" class ="easyui-datebox" style="width: 100px" />
+            到:
+            <input id="EndTime" class="easyui-datebox" style="width: 100px" />&nbsp;
+           管理员名: 
+            <input id="AdminName"/>&nbsp;
+            按权限：
+              <select id="quanxian" class="easyui-combobox" name="state" datatextfield="AdminRightName" datavaluefield="AdminRightName" style="width: 150px;" panelheight="auto"  runat="server">
+              </select>
+            <a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search'" onclick="reloadgrid()">Search</a>
+        </div>
+    </div>
+        </form>
+    </div>
+    <style scoped>
+        .f1{
+            width:200px;
+        }
+    </style>
+    <script type="text/javascript">
+        $(function () {
+            $('#ff').form({
+                success: function (data) {
+                    $.messager.alert('Info', data, 'info');
+                }
+            });
+        });
+    </script>
+    <input type="button" id="ajaxrequest" value="getrequest" onclick="ajaxRequest()" />
+</body>
+</html>

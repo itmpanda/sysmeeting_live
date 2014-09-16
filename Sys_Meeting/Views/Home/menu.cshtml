@@ -1,0 +1,161 @@
+﻿@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>menu</title>
+    <!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+    <script src="../../Content/jquery-easyui-1.4/jquery.min.js" type="text/javascript"></script>
+    <style type="text/css">
+        *
+        {
+            padding: 0;
+            margin: 0;
+            outline: none;
+        }
+        html
+        {
+            min-height: 101%;
+        }
+        *html
+        {
+            background-image: url(about:blank);
+            background-attachment: fixed;
+        }
+        body
+        {
+            font-family: 'MicroSoft Yahei' ,verdana,arial,tahoma;
+            font-size: 12px;
+            color: #333;
+            -webkit-text-size-adjust: none;
+        }
+        div
+        {
+            margin: 0 auto;
+        }
+        
+        a
+        {
+            text-decoration: none;
+            word-wrap: break-word;
+            outline: none;
+            hide-focus: expression(this.hideFocus=true);
+            transition: all 0.2s ease-in-out;
+            -webkit-transition: all 0.2s ease-in-out;
+            -moz-transition: all 0.2s ease-in-out;
+            -o-transition: all 0.2s ease-in-out;
+            -ms-transition: all 0.2s ease-in-out;
+        }
+        a:hover
+        {
+            text-decoration: none;
+        }
+        .lanmu-content
+        {
+            overflow: hidden;
+        }
+        .lanmu-content .listmore
+        {
+            display: block;
+            text-align: center;
+            height: 25px;
+            border-top: 0;
+            background: #eee;
+            color: #1594d1;
+            font: normal 12px/25px Tahoma,Verdana;
+        }
+        .lanmu-list
+        {
+            display: block;
+        }
+        .lanmu-list dt
+        {
+            display: block;
+            height: 0px;
+            background: #0066CC;
+            font: bold 14px/40px "宋体";
+            color: #fff;
+            padding-left: 10px;
+        }
+        .lanmu-list li
+        {
+            padding-top: 2px;
+        }
+        .lanmu-list li a
+        {
+            display: block;
+            height: 33px;
+            background: #f9f9f9;
+            border-bottom: 1px solid #eee;
+            border-top: 2px solid #fff;
+            border-left: 2px solid #999;
+            border-right: 1px solid #eee;
+            font: normal 12px/33px Georgia "宋体";
+            color: #adadad;
+            padding-left: 25px;
+            line-height: 33px;
+        }
+        .lanmu-list li a:hover
+        {
+            padding-left: 35px;
+        }
+        .lanmu-list li a:hover, .lanmu-list li a.current
+        {
+            border-left: 2px solid #1160ba;
+            background-color: #f6f6f6;
+            color: #1160ba;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div title="权限管理" iconcls="icon-man">
+        <div class="lanmu-content">
+            <ul class="lanmu-list">
+                @*<dt>sub-menu-title</dt>*@
+                <li><a href='javascript:void(0);' class='current' title="焦点幻灯">焦点幻灯</a></li>
+                <li><a href='javascript:void(0);' title="触屏特效">触屏特效</a></li>
+                <li><a href='javascript:void(0);' title="相册特效">相册特效</a></li>
+                <li><a href='javascript:void(0);' title="图片特效">图片特效</a></li>
+                <li><a href='javascript:void(0);' title="文字特效">文字特效</a></li>
+                <li><a href='javascript:void(0);' title="窗口图层">窗口图层</a></li>
+                <li><a href='javascript:void(0);' title="表格表单">表格表单</a></li>
+                <li><a href='javascript:void(0);' title="JSHTML5/CSS3">HTML5/CSS3</a></li>
+                <li><a href='javascript:void(0);' title="JS其他代码">其他代码</a></li>
+            </ul>
+            <a class="listmore" style="display: none;" href="javascript:;">查看更多 ↓</a>
+        </div>
+    </div>
+    @*左侧菜单Start*@
+    <script type="text/javascript">
+        var LanMu = $(".lanmu-list");
+        var lanMuSun = LanMu.children('li');
+        if ((lanMuSun.size()) > 8) {
+            LanMu.children("li:gt(5)").hide();
+            $(".listmore").show();
+        }
+        $(".listmore").bind("click", function () {
+            if (!$(".listmore").hasClass('ListMoreOn')) {
+                $(".listmore").addClass('ListMoreOn');
+                LanMu.children("li:gt(5)").slideDown();
+                $(".listmore").html("折叠栏目 ↑")
+            } else {
+                $(".listmore").removeClass('ListMoreOn');
+                LanMu.children("li:gt(5)").slideUp();
+                $(".listmore").html("查看更多 ↓");
+
+            }
+        })
+        
+        $(".lanmu-list li a").click(function () {
+            $(".lanmu-list li a").removeAttr("class");
+            $(this).toggleClass("current"); //增加class
+        })
+
+    </script>
+    
+    @*左侧菜单End*@
+</body>
+</html>
