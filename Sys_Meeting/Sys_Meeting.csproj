@@ -726,6 +726,15 @@
     <Content Include="Content\jquery-easyui-1.4\themes\metro\tree.css" />
     <Content Include="Content\jquery-easyui-1.4\themes\metro\validatebox.css" />
     <Content Include="Content\jquery-easyui-1.4\themes\metro\window.css" />
+    <Content Include="Content\jquery-easyui-1.4\timeline\css\history.css" />
+    <Content Include="Content\jquery-easyui-1.4\timeline\images\clock.png" />
+    <Content Include="Content\jquery-easyui-1.4\timeline\images\date.png" />
+    <Content Include="Content\jquery-easyui-1.4\timeline\images\icons.png" />
+    <Content Include="Content\jquery-easyui-1.4\timeline\images\point.png" />
+    <Content Include="Content\jquery-easyui-1.4\timeline\images\vertical.png" />
+    <Content Include="Content\jquery-easyui-1.4\timeline\js\history.js" />
+    <Content Include="Content\jquery-easyui-1.4\timeline\js\jquery.easing.js" />
+    <Content Include="Content\jquery-easyui-1.4\timeline\js\jquery.mousewheel.js" />
     <Content Include="Content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
     <Content Include="Content\themes\base\images\ui-bg_flat_75_ffffff_40x100.png" />
     <Content Include="Content\themes\base\images\ui-bg_glass_55_fbf9ee_1x400.png" />
@@ -846,6 +855,7 @@
     <Content Include="Views\Home\lanmu_Menu.cshtml" />
     <Content Include="Views\Home\ajaxHandler.cshtml" />
     <Content Include="Views\Home\grid.cshtml" />
+    <Content Include="Views\Home\TimeLine.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

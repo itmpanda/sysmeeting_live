@@ -37,9 +37,15 @@ namespace Sys_Meeting.Controllers
             return View("ajaxHandler");
         }
 
-        public ActionResult grid()
+        public ActionResult grid(string id,string name)
         {
+            Response.Write("id:" + id + ",name:" + name);
             return View("grid");
+        }
+
+        public ActionResult TimeLine()
+        {
+            return View("TimeLine");
         }
     }
 }
