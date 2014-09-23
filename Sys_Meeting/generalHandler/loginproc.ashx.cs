@@ -13,8 +13,8 @@ namespace Sys_Meeting.Views.Home
 
         public void ProcessRequest(HttpContext context)
         {
-            context.Response.ContentType = "text/plain";
-            context.Response.Write("Hello World");
+            //context.Response.ContentType = "text/plain";
+            //context.Response.Write("Hello World");
         }
 
         public bool IsReusable

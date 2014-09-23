@@ -29,6 +29,5 @@ D:\SysMeeting\Sys_Meeting\Sys_Meeting\bin\System.Web.Razor.xml
 D:\SysMeeting\Sys_Meeting\Sys_Meeting\bin\System.Web.WebPages.xml
 D:\SysMeeting\Sys_Meeting\Sys_Meeting\bin\System.Web.WebPages.Deployment.xml
 D:\SysMeeting\Sys_Meeting\Sys_Meeting\bin\System.Web.WebPages.Razor.xml
-D:\SysMeeting\Sys_Meeting\Sys_Meeting\obj\Debug\Sys_Meeting.csprojResolveAssemblyReference.cache
 D:\SysMeeting\Sys_Meeting\Sys_Meeting\obj\Debug\Sys_Meeting.dll
 D:\SysMeeting\Sys_Meeting\Sys_Meeting\obj\Debug\Sys_Meeting.pdb

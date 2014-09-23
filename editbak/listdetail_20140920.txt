@@ -1,0 +1,381 @@
+@model Sys_Meeting.Models.MeetListModels
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta<meta name="viewport" content="width=device-width" />
+    <title>List</title>
+    <script type="text/javascript" src="~/Scripts/jquery-1.7.1.min.js"></script>
+    <script type="text/javascript" src="~/Scripts/jquery.validate.min.js"></script>
+    <script type="text/javascript" src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+    
+    <link href="../../Content/jquery-easyui-1.4/themes/metro/easyui.css" rel="stylesheet"
+        type="text/css" />
+    <link href="../../Content/jquery-easyui-1.4/themes/icon.css" rel="stylesheet" type="text/css" />
+    <link href="../../Content/jquery-easyui-1.4/demo/demo.css" rel="stylesheet" type="text/css" />
+    
+    <script src="../../Content/jquery-easyui-1.4/jquery.easyui.min.js" type="text/javascript"></script>
+    <script src="../../Content/jquery-easyui-1.4/locale/easyui-lang-zh_TW.js" type="text/javascript"></script>
+    
+    
+    @*<link href="../../Content/showdailog/showDialog.css" rel="stylesheet" type="text/css" />
+    <script src="../../Content/showdailog/showDialog.js" type="text/javascript"></script>*@
+</head>
+    <body>
+        <br/>
+        
+        @using (Html.BeginForm("ListDetail","Meet","post"))
+        {
+            @Html.ValidationSummary(true)
+            <div id="meetlistcontent">
+                <select id="cc" style="width: 150px;"></select>
+                <input class="easyui-textbox" data-options="prompt:'關鍵字...'," style="width:450px;height:24px;">
+                <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search" id="btnQuery">搜索</a>
+                <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-reload" id="btnReload">刷新</a>
+                <div id="sp">
+                    <div style="color: #99BBE8; background: #fafafa; padding: 5px;">請選擇查詢條件：</div>
+                    <div style="padding: 10px">
+                        <input type="radio" name="lang" value="01" /><span>事項編號</span><br/>
+                        <input type="radio" name="lang" value="02" /><span>事項名稱</span><br/>
+                    </div>
+                </div>
+                
+                <br/>
+                <hr/>
+                <input type="button" value="新增" id="btnCreate"/>
+                <input type="button" value="修改" id="btnEdit"/>
+                <input type="button" value="刪除" id="btnDelete"/>
+                <input type="button" value="彈出查詢" id="btnQueryMsg"/>
+                <a href="/home/grid" target="mainFrame" class="easyui-linkbutton" iconCls="icon-reload" id="btnNew">新增</a>
+            </div>
+        }
+        
+        <table id="dg" class="easyui-datagrid" title="會議記錄內容"   
+               data-options="singleSelect:true
+                ,collapsible:true
+                ,url:'/meet/getlist'
+                ,pagination:true
+                ,rownumbers:true
+                ,pageSize:10
+                ,pageList:[5,10,15,20]
+                ,remoteSort: false
+
+                ,method:'get'">
+            <thead>
+                <tr>
+                    <th data-options="field:'list_id',resizable:true" width="15%">事項編號</th>
+                    <th data-options="field:'title',resizable:false" width="15%">事項名稱</th>
+                </tr>
+            </thead>
+        </table>
+        
+        
+        @*>--新增事項界面*@
+        <div id="addproject-div-list" title="新增事項" style="display: none" >
+            @using (Html.BeginForm("ListDetail", "Meet", "post"))
+            {
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true)
+
+                <fieldset>
+                    <legend></legend>
+    
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.ListId)
+                    </div>
+                    <div class="editor-field">
+                        @Html.EditorFor(model => model.ListId, "", "newlistid")
+                        @Html.ValidationMessageFor(model => model.ListId)
+                    </div>
+    
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.ListName)
+                    </div>
+                    <div class="editor-field">
+                        @*@Html.TextAreaFor(model => model.ListName,10,60,new{})*@
+                        <textarea id="newListName" cols="60" rows="10"></textarea>
+                        @Html.ValidationMessageFor(model => model.ListName)
+                    </div>
+    
+                    <p>
+                        <input type="submit" value="保存"/>
+                    </p>
+                </fieldset>
+            }
+        </div>
+        @*新增事項界面--<*@
+
+        @*>--查詢事項界面*@
+        <div id="querymeet-div-list" title="查詢事項" style="display: none" >
+            <fieldset>
+                <legend>雙擊選擇記錄</legend>
+    
+                事項編號:
+                <input class="easyui-textbox" data-options="
+                    
+                    prompt:'關鍵字...',
+                    " style="width:250px;height:24px;">
+                <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search" id="btnQueryList">搜索</a>
+    
+                <p>
+                        
+                </p>
+            </fieldset><br/>
+            <table id="dgQueryList" class="easyui-datagrid" title="會議記錄內容" style="width:95%;height: 80%;"
+                   data-options="singleSelect:true
+                                ,collapsible:true
+                                ,url:'/meet/getlist'
+                                ,pagination:true
+                                ,rownumbers:true
+                                ,pageSize:10
+                                ,pageList:[5,10,15,20]
+                                ,remoteSort: false
+                                ,idField: 'ID'
+                                ,onDblClickRow:onDblClickRow
+                                ,method:'get'">
+                <thead>
+                    <tr>
+                        <th data-options="field:'list_id',resizable:true" width="15%">事項編號</th>
+                        <th data-options="field:'title',resizable:false" width="15%">事項名稱</th>
+                    </tr>
+                </thead>
+            </table>
+
+                
+        </div>
+        @*查詢事項界面--<*@
+        
+        
+
+        @*>--多面板展開*@
+        @*20140920
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconcls="icon-add" id="btnAddPanels" onclick="addPanels()">添加</a>
+
+        <div class="easyui-accordion" data-options="multiple:true" style="width:500px;height1:300px;" id="meetlistpanels">
+            <div title="事項1" data-options="iconCls:'icon-ok'" style="overflow:auto;padding:10px;">
+                <p>事項內容</p>
+            </div>
+            <div title="事項2" style="padding:10px;" data-options="href:'/meet/listdetail/'">
+                <p>事項內容</p>
+            </div>
+            
+        </div>*@
+        @*多面板展開--<*@
+        
+
+        <script type="text/javascript">
+            //刷新
+            $('#btnReload').click(function () {
+                $('#dg').datagrid('reload');
+            });
+
+            //查詢
+            var mode = '';
+
+            $("#btnQuery").click(function () {
+                $("#dg").datagrid({
+                    url: '/meet/list',
+                    method: 'post'
+                });
+            });
+
+            //新增
+            $("#btnCreate").click(function () {
+                mode = 'create';
+                openDailog(mode);
+            });
+
+            //修改
+            $("#btnEdit").click(function () {
+                mode = 'edit';
+                openDailog(mode);
+            });
+
+            //刪除
+            $("#btnDelete").click(function () {
+                var row = $('#dg').datagrid('getSelected');
+                if (row) {
+                    $.messager.confirm('info', '確定是否要刪除此記錄', function (data) {
+                        alert(data);
+                    });
+                } else {
+                    $.messager.alert('提示', '請先選擇要刪除的記錄', 'info');
+                };
+            });
+            //openDeleteDailog();
+            //                $.msgbox("Are you sure that you want to permanently delete the selected element?", {
+            //                    type: "confirm",
+            //                    buttons: [
+            //                        { type: "submit", value: "Yes" },
+            //                        { type: "submit", value: "No" },
+            //                        { type: "cancel", value: "Cancel" }
+            //                    ]
+            //                }, function(result) {
+            //                    //$("#result2").text(result);
+            //                    //                    $.messager.alert('info', result);
+            //                    alert(result);
+            //                    
+            //                });
+            //});
+
+            //彈出查詢
+            $("#btnQueryMsg").click(function () {
+                //openDeleteDailog();
+                openQueryMeetList();
+            });
+            function openQueryMeetList() {
+
+                $("#dgQueryList").datagrid({
+                    url: '/meet/getlist',
+                    method: 'post'
+                });
+
+                $('#querymeet-div-list').show().dialog({
+                    modal: true,
+                    width: 800,
+                    height: 500,
+                    title: '新增事項',
+                    //                    href: '/meet/new/',
+                    cache: false,
+                    collapsible: true,
+                    minimizable: false,
+                    maximized: false,
+                    resizable: true,
+                    toolbar: [
+                        {
+                            text: '選擇',
+                            iconCls: 'icon-ok',
+                            handler: function () {
+                                //var newlistname = $("#newListName").val();
+                                //                                if (mode == 'create') {
+                                //                                    $.messager.alert('info', mode);
+                                //                                } else if(mode=='edit'){
+                                //                                    $.messager.alert('info', mode);
+                                //                                }
+                                //alert(newlistname);
+                                //alert($("#newlistid").val());
+                                //$.messager.alert('info','提交代?');
+                            }
+                        }, '-', {
+                            text: '關閉',
+                            iconCls: 'icon-no',
+                            handler: function () {
+                                $('#newlistid').val('');
+                                $('#newListName').val('');
+                                //                                $.messager.alert('info', mode);
+                                $('#querymeet-div-list').dialog('close');
+                            }
+                        }
+                    ]
+                });
+            }
+
+            function openDailog(mode) {
+                if (mode == 'create') {
+                    $('#newlistid').val('create');
+                }
+                else if (mode == 'edit') {
+                    $('#newlistid').val('edit');
+                }
+
+                $('#addproject-div-list').show().dialog({
+                    modal: true,
+                    width: 500,
+                    height: 400,
+                    title: '新增事項',
+                    //                    href: '/meet/new/',
+                    cache: false,
+                    collapsible: false,
+                    minimizable: false,
+                    maximized: false,
+                    resizable: true,
+                    toolbar: [
+                        {
+                            text: '保存',
+                            iconCls: 'icon-ok',
+                            handler: function () {
+                                //var newlistname = $("#newListName").val();
+                                //                                if (mode == 'create') {
+                                //                                    $.messager.alert('info', mode);
+                                //                                } else if(mode=='edit'){
+                                //                                    $.messager.alert('info', mode);
+                                //                                }
+                                //alert(newlistname);
+                                //alert($("#newlistid").val());
+                                //$.messager.alert('info','提交代?');
+                            }
+                        }, '-', {
+                            text: '關閉',
+                            iconCls: 'icon-no',
+                            handler: function () {
+                                $('#newlistid').val('');
+                                $('#newListName').val('');
+                                //                                $.messager.alert('info', mode);
+                                $('#addproject-div-list').dialog('close');
+                            }
+                        }
+                    ]
+                });
+            }
+
+            //            function openEditDailog() {
+            //                var rows = $('#dg').datagrid('getSelections');
+            //                var ss=[];
+            //                for (var i = 0; i < rows.length; i++) {
+            //                    var row = rows[i];
+            //                    ss.push(row.id + ',' + row.name);
+            //                    
+            //                }
+            //                //$.messager.alert('info', rows[1]);
+            //                $.messager.alert('info', ss.join('<br/>'));
+            //            }
+
+            function openDeleteDailog() {
+
+            }
+
+            //下拉選擇框
+            $(function () {
+                $('#cc').combo({
+                    required: true,
+                    editable: false
+                });
+                $('#sp').appendTo($('#cc').combo('panel'));
+                $('#sp input').click(function () {
+                    var v = $(this).val();
+                    var s = $(this).next('span').text();
+                    $('#cc').combo('setValue', v).combo('setText', s).combo('hidePanel');
+                });
+            });
+
+            //新增面板
+            var panelIdx = 3;
+            function addPanels() {
+                //            $('#btnAddPanels').click(function () {
+                //                $('#btnAddPanels').accordion('add', {
+                //                    title: 'addpanel:' + panelIdx,
+                //                    content:'<div style="panding:10px">content'+panelIdx+'</div>'
+                //                });
+                //                panelIdx += 1;
+                //                alert('addpanels');
+                $('#meetlistpanels').accordion('add', {
+                    title: '事項' + panelIdx,
+                    content: '<div style="padding:10px">Content' + panelIdx + '</div>'
+                });
+                panelIdx++;
+            };
+
+            function onDblClickRow(index, field) {
+                alert(index + ',' + field.list_id + ',' + field.title);
+                $('#querymeet-div-list').dialog('close');
+                //                $('#dgQueryList').datagrid('selectRow', index)
+                //                        .datagrid('editCell', { index: index, field: field });
+            }
+        </script>
+</body>
+</html>
