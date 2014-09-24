@@ -1,0 +1,82 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+</head>
+    <body>
+        <table id="dgSearch"></table>
+        <script type="text/javascript">
+
+            $(function () {
+                
+                $('#dgSearch').datagrid({
+                    //url: u,
+                    singleSelect: false,
+                    width: '900px',
+                    height: '500px',
+                    pagination: true,
+                    rownumbers: true,
+                    pageSize: 10,
+                    pageList: [5, 10, 15, 20],
+                    remoteSort: false,
+                    fit: true,
+                    columns:[[]]
+//                columns: [[{ field: 'ck', title: '用戶編號', width: 100, checkbox: true }
+//                    , { field: 'wor_num', title: '用戶編號', width: 100 }
+//                    , { field: 'ful_name', title: '名稱', width: 100}]],
+                    //columns:cols,//[cols],
+//                onDblClickRow: function (rowIdx, rowData) {
+//                    $(curOpenSearchName + '_f').val(rowData.wor_num);
+//                    $(curOpenSearchName).val(rowData.ful_name);
+//                    CloseDialog('#acc-search-form');
+//                }
+                });
+
+                var columns = new Array();
+                var cols = new Array();
+                var colData = new Object();
+                var rows = new Array();
+
+                $.ajax({
+                    url: '/list/search',
+                    type: 'post',
+                    dataType: 'json',
+                    success: function (data) {
+                        //动态生成表头开始
+                        //alert('datarow:' + data.rows);
+                        rows = data.rows;
+                        if (data.columns != null) {
+                            $.each(data.columns, function () {
+
+                                colData = new Object();
+                                colData.field = this.field;
+                                colData.title = this.title;
+                                colData.width = this.width; //也可以配置在数据库，这样整个页面的生成全部是配置的
+
+//                                colData.formatter = function (value, row, index) {
+
+//                                    //这两句是嵌套对象属性绑定，insideObject 为嵌套的对象，field 为对象的属性
+//                                    //datagrid 的field不能重复，注意在绑定field 时不能全部用 insideObject，需要使用  insideObject 的属性绑定
+//                                    var field = this.field;
+//                                    return row.insideObject[field];
+
+//                                };
+                                cols.push(colData);
+                            });
+                        };
+                        columns.push(cols);
+                        $('#dgSearch').datagrid({ columns: columns });
+//                        alert(data.row);
+                        $('#dgSearch').datagrid({ 'loaddata': rows});
+                    }
+                });
+            });
+        </script>
+    </body>
+</html>

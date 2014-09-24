@@ -8,116 +8,96 @@
 <head>
     <meta name="viewport" content="width=device-width" />
     <title>TestSaveGrid</title>
-    
-    <link rel="shortcut icon" href="../../Content/favicon.ico" type="image/x-icon" />
-    <link href="../../Content/jquery-plugin/themes/metro/easyui.css" rel="stylesheet"
-        type="text/css" />
-    <link href="../../Content/jquery-plugin/themes/icon.css" rel="stylesheet" type="text/css" />
-    <link href="../../Content/jquery-plugin/demo/demo.css" rel="stylesheet" type="text/css" />
-
-    <script type="text/javascript" src="~/Scripts/jquery-1.7.1.min.js"></script>
-    <script type="text/javascript" src="~/Scripts/jquery.validate.min.js"></script>
-    <script type="text/javascript" src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
-  
-    <script src="../../Content/jquery-plugin/jquery.easyui.min.js" type="text/javascript"></script>
-    <script src="../../Content/jquery-plugin/locale/easyui-lang-zh_TW.js" type="text/javascript"></script>
-
 </head>
 <body>
     <script type="text/javascript">
-        $(function() {
+        $(function () {
             var $dg = $("#dg");
             $dg.datagrid({
-                url: "MeetMaintenance/TestSaveGrid",
+                url: "servlet/list",
                 width: 700,
                 height: 250,
-                columns: [
-                    [
-                        {
-                            field: 'code',
-                            title: 'Code',
-                            width: 100,
-                            editor: "validatebox"
-                        }, {
-                            field: 'name',
-                            title: 'Name',
-                            width: 200,
-                            editor: "validatebox"
-                        }, {
-                            field: 'price',
-                            title: 'Price',
-                            width: 200,
-                            align: 'right',
-                            editor: "numberbox"
-                        }
-                    ]
-                ],
-                toolbar: [
-                    {
-                        text: "添加",
-                        iconCls: "icon-add",
-                        handler: function() {
-                            $dg.datagrid('appendRow', {});
-                            var rows = $dg.datagrid('getRows');
-                            $dg.datagrid('beginEdit', rows.length - 1);
-                        }
-                    }, {
-                        text: "编辑",
-                        iconCls: "icon-edit",
-                        handler: function() {
-                            var row = $dg.datagrid('getSelected');
-                            if (row) {
-                                var rowIndex = $dg.datagrid('getRowIndex', row);
-                                $dg.datagrid('beginEdit', rowIndex);
-                            }
-                        }
-                    }, {
-                        text: "删除",
-                        iconCls: "icon-remove",
-                        handler: function() {
-                            var row = $dg.datagrid('getSelected');
-                            if (row) {
-                                var rowIndex = $dg.datagrid('getRowIndex', row);
-                                $dg.datagrid('deleteRow', rowIndex);
-                            }
-                        }
-                    }, {
-                        text: "结束编辑",
-                        iconCls: "icon-cancel",
-                        handler: endEdit
-                    }, {
-                        text: "保存",
-                        iconCls: "icon-save",
-                        handler: function() {
-                            endEdit();
-                            if ($dg.datagrid('getChanges').length) {
-                                var inserted = $dg.datagrid('getChanges', "inserted");
-                                var deleted = $dg.datagrid('getChanges', "deleted");
-                                var updated = $dg.datagrid('getChanges', "updated");
-
-                                var effectRow = new Object();
-                                if (inserted.length) {
-                                    effectRow["inserted"] = JSON.stringify(inserted);
-                                }
-                                if (deleted.length) {
-                                    effectRow["deleted"] = JSON.stringify(deleted);
-                                }
-                                if (updated.length) {
-                                    effectRow["updated"] = JSON.stringify(updated);
-                                }
-
-                                $.post("servlet/commit", effectRow, function(rsp) {
-                                    if (rsp.status) {
-                                        $.messager.alert("提示", "提交成功！");
-                                        $dg.datagrid('acceptChanges');
-                                    }
-                                }, "JSON").error(function() {
-                                    $.messager.alert("提示", "提交错误了！");
-                                });
-                            }
+                columns: [[{
+                    field: 'code',
+                    title: 'Code',
+                    width: 100,
+                    editor: "validatebox"
+                }, {
+                    field: 'name',
+                    title: 'Name',
+                    width: 200,
+                    editor: "validatebox"
+                }, {
+                    field: 'price',
+                    title: 'Price',
+                    width: 200,
+                    align: 'right',
+                    editor: "numberbox"
+                }]],
+                toolbar: [{
+                    text: "添加",
+                    iconCls: "icon-add",
+                    handler: function () {
+                        $dg.datagrid('appendRow', {});
+                        var rows = $dg.datagrid('getRows');
+                        $dg.datagrid('beginEdit', rows.length - 1);
+                    }
+                }, {
+                    text: "编辑",
+                    iconCls: "icon-edit",
+                    handler: function () {
+                        var row = $dg.datagrid('getSelected');
+                        if (row) {
+                            var rowIndex = $dg.datagrid('getRowIndex', row);
+                            $dg.datagrid('beginEdit', rowIndex);
                         }
                     }
-                ]
+                }, {
+                    text: "删除",
+                    iconCls: "icon-remove",
+                    handler: function () {
+                        var row = $dg.datagrid('getSelected');
+                        if (row) {
+                            var rowIndex = $dg.datagrid('getRowIndex', row);
+                            $dg.datagrid('deleteRow', rowIndex);
+                        }
+                    }
+                }, {
+                    text: "结束编辑",
+                    iconCls: "icon-cancel",
+                    handler: endEdit
+                }, {
+                    text: "保存",
+                    iconCls: "icon-save",
+                    handler: function () {
+                        endEdit();
+                        if ($dg.datagrid('getChanges').length) {
+                            var inserted = $dg.datagrid('getChanges', "inserted");
+                            var deleted = $dg.datagrid('getChanges', "deleted");
+                            var updated = $dg.datagrid('getChanges', "updated");
+
+                            var effectRow = new Object();
+                            if (inserted.length) {
+                                effectRow["inserted"] = JSON.stringify(inserted);
+                            }
+                            if (deleted.length) {
+                                effectRow["deleted"] = JSON.stringify(deleted);
+                            }
+                            if (updated.length) {
+                                effectRow["updated"] = JSON.stringify(updated);
+                            }
+
+                            $.post("servlet/commit", effectRow, function (rsp) {
+                                if (rsp.status) {
+                                    $.messager.alert("提示", "提交成功！");
+                                    $dg.datagrid('acceptChanges');
+                                }
+                            }, "JSON").error(function () {
+                                $.messager.alert("提示", "提交错误了！");
+                            });
+                        }
+                    }
+                }]
             });
 
             function endEdit() {
@@ -128,8 +108,7 @@
             }
         });
 </script>
-
+<body>
 	<table id="dg" title="批量操作"></table>
-
 </body>
 </html>

@@ -42,6 +42,8 @@ namespace Sys_Meeting.Models
 
     public class MeetMaintenanceModels
     {
+        //系統ID
+        public string SysId { get; set; }
         //會議編號
         [Display(Name = "會議編號")]
         [Required]
@@ -80,6 +82,11 @@ namespace Sys_Meeting.Models
         [Display(Name = "會議名稱")]
         [Required]
         public string MtTitle { get; set; }
+
+        //共享指定人員
+        public string MtShareList { get; set; }
+        //public List<string> GuidList;
+
     }
 
 }

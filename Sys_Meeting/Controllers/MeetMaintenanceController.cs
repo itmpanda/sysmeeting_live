@@ -6,11 +6,13 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Sys_Meeting.generalHandler;
+using Sys_Meeting.Models;
 
 namespace Sys_Meeting.Controllers
 {
     public class MeetMaintenanceController : Controller
     {
+        public List<string> MtList;
         //
         // GET: /MeetMaintenance/
 
@@ -50,14 +52,38 @@ namespace Sys_Meeting.Controllers
         /// 
         /// </summary>
         /// <returns></returns>
-        public ActionResult Action()
+        public ActionResult Action(MeetMaintenanceModels meetMaintenanceModels)
         {
+            
             return Json(new {result = "1"});
         }
 
         public ActionResult TestSaveGrid()
         {
             return View();
+        }
+
+        public ActionResult GetGUID()
+        {
+            //前臺和后臺的的GUID匹配，一致就保存
+            //暫時不用
+            
+            string guid = Guid.NewGuid().ToString().ToUpper();
+            //if (MtList == null)
+            //{
+            //    MtList=new List<string>();
+            //}
+            //MtList.Add(guid);
+
+            //string[] SysId =new string[]{};
+            //ViewData["sysid"] = guid;
+            
+            return Json(new {result=1,sysid=guid});
+        }
+
+        public ActionResult GetGUIDExists(string guid)
+        {
+            return Content(MtList.Contains(guid).ToString());
         }
     }
 }

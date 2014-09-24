@@ -1,0 +1,96 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Search</title>
+</head>
+    <body>
+        @*<input type="button" id="btnGetSelected" value="GetSelected"/>*@
+        @*關鍵字:<input type="text" id="txt-search-acc" value=""/><input type="button" id="btn-query-acc" value="查詢"/>*@
+        <table id="dgSearch"></table>
+        <script type="text/javascript">
+            $(function () {
+                function SetCols(f,t,w,c) {
+                    var o = this;
+                    o.field = f;
+                    o.title = t;
+                    o.width = w;
+                    o.checkbox = c;
+                }
+
+                var c = [];
+                var c1 = new SetCols('ck', '用戶編號', 100, true);
+                var c2 = new SetCols('wor_num', '用戶編號', 100, false);
+                var c3 = new SetCols('ful_name', '名稱', 100, false);
+
+                c.push(c1);
+                c.push(c2);
+                c.push(c3);
+//                alert(JSON.stringify(c));
+                //                GetSearch('#dgSearch', '/account/searchaccount','{\"total\":3,\"columns\":'+JSON.stringify(c)+'}');
+                GetSearch('#dgSearch', '/account/searchaccount', JSON.stringify(c));
+            });
+
+//            //函數說明
+//            function GetSearch() {
+//                $('#dgSearch').datagrid({
+//                    url: '/account/searchaccount',
+//                    singleSelect: false,
+//                    width: '900px',
+//                    height: '500px',
+//                    pagination: true,
+//                    rownumbers: true,
+//                    pageSize: 10,
+//                    pageList: [5, 10, 15, 20],
+//                    remoteSort: false,
+//                    fit: true,
+//                    columns: [
+//                        [
+//                            { field: 'ck', title: '用戶編號', width: 100, checkbox: true },
+//                            { field: 'wor_num', title: '用戶編號', width: 100 },
+//                            { field: 'ful_name', title: '名稱', width: 100 }
+//                        ]
+//                    ],
+//                    onDblClickRow: function(rowIdx, rowData) {
+//                        $(curOpenSearchName + '_f').val(rowData.wor_num);
+//                        $(curOpenSearchName).val(rowData.ful_name);
+////                        fnSearchDone();
+//                    }
+//                });
+//            }
+
+////            $('#btnGetSelected').click(function() {
+////                var rows = GetSelections('#dgSearch', fnSearchDone);
+////                var rows2 = [];
+////                for (var r = 0; r < rows.length; r++) {
+////                    rows2 = rows[r];
+////                    alert('1:' + rows2.wor_num + ',2:' + rows2.ful_name);
+////                }
+////            });
+
+//            function fnSearchDone() {
+//                CloseDialog('#acc-search-form');
+//            }
+
+//            //獲取選擇表格的行數
+//            //d:表格對象名稱
+//            //返回行為數組
+//            function GetDGSelections(d, fn) {
+//                var rrows=[];
+//                var rows = $(d).datagrid('getSelections');
+//                for (var i = 0; i < rows.length; i++) {
+//                    var row = rows[i];
+//                    rrows.push(row);
+//                }
+//                fn();
+//                return rrows;
+//            }
+
+        </script>
+    </body>
+</html>

@@ -15,7 +15,7 @@ namespace Sys_Meeting.Controllers
     {
         //
         // GET: /Meet/
-        public string gConnectionString = SqlHelper.ReportCentreConnectionString;
+        //public string gConnectionString = SqlHelper.ReportCentreConnectionString;
         
         public ActionResult Index()
         {
@@ -89,7 +89,7 @@ namespace Sys_Meeting.Controllers
             if (Session["userid"] == null)
             {
                 returnSuc = -1;
-                sErrmsg = "登陸超時,請重新登陸！";
+                sErrmsg = GetErrDescription(returnSuc);//"登陸超時,請重新登陸！";
                 //return RedirectToAction("Login", "Account");
             }
             else
@@ -186,7 +186,7 @@ namespace Sys_Meeting.Controllers
             int page = 1;
             int rows = 10;
 
-            DataSet ds = SqlHelper.ExecuteDataset(gConnectionString, CommandType.Text, sql, new SqlParameter("@pagesize", rows), new SqlParameter("@pagenum", page));
+            DataSet ds = SqlHelper.ExecuteDataset(DbCommon.GConnectionString, CommandType.Text, sql, new SqlParameter("@pagesize", rows), new SqlParameter("@pagenum", page));
 
             string json = DataTableConvertJson.Dataset2Json(ds);
             json = "{\"total\":30,\"rows\":" + json + "}";
@@ -198,7 +198,7 @@ namespace Sys_Meeting.Controllers
 
             //string connString = SqlHelper.ReportCentreConnectionString;
             string sql = "select top 1 sys_id,list_id,title from tb_list where is_del=0 and sys_id=@sys_id";
-            DataSet ds = SqlHelper.ExecuteDataset(gConnectionString, CommandType.Text, sql
+            DataSet ds = SqlHelper.ExecuteDataset(DbCommon.GConnectionString, CommandType.Text, sql
                 , new SqlParameter("@sys_id", sysid));
             string returnJson = DataTableConvertJson.Dataset2Json(ds);
             int returnSuc = ds.Tables[0].Rows.Count;
@@ -229,7 +229,7 @@ namespace Sys_Meeting.Controllers
             {
                 try
                 {
-                    returnSuc = SqlHelper.ExecuteNonQuery(gConnectionString, CommandType.Text, sql
+                    returnSuc = SqlHelper.ExecuteNonQuery(DbCommon.GConnectionString, CommandType.Text, sql
                         , new SqlParameter("@sys_id", sysid)
                         , new SqlParameter("@del_by", Session["userid"].ToString())
                         , new SqlParameter("@del_dte", DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss")));
@@ -275,7 +275,7 @@ namespace Sys_Meeting.Controllers
             int page = 1;
             int rows = 10;
 
-            DataSet ds = SqlHelper.ExecuteDataset(gConnectionString, CommandType.Text, sql
+            DataSet ds = SqlHelper.ExecuteDataset(DbCommon.GConnectionString, CommandType.Text, sql
                 , new SqlParameter("@pagesize", rows)
                 , new SqlParameter("@pagenum", page)
                 , new SqlParameter("@wd", "%" + wd + "%"));
