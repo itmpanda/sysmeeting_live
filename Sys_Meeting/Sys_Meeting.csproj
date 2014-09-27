@@ -402,6 +402,7 @@
     <Content Include="Content\jquery-plugin\locale\easyui-lang-tr.js" />
     <Content Include="Content\jquery-plugin\locale\easyui-lang-zh_CN.js" />
     <Content Include="Content\jquery-plugin\locale\easyui-lang-zh_TW.js" />
+    <Content Include="Content\jquery-plugin\login.css" />
     <Content Include="Content\jquery-plugin\menu-style.css" />
     <Content Include="Content\jquery-plugin\menucategory.js" />
     <Content Include="Content\jquery-plugin\metro-bootstrap.css" />
@@ -736,24 +737,9 @@
     <Content Include="Content\jquery-plugin\themes\metro\tree.css" />
     <Content Include="Content\jquery-plugin\themes\metro\validatebox.css" />
     <Content Include="Content\jquery-plugin\themes\metro\window.css" />
-    <Content Include="Content\jquery-plugin\timeline\css\history.css" />
-    <Content Include="Content\jquery-plugin\timeline\images\clock.png" />
-    <Content Include="Content\jquery-plugin\timeline\images\date.png" />
-    <Content Include="Content\jquery-plugin\timeline\images\icons.png" />
-    <Content Include="Content\jquery-plugin\timeline\images\point.png" />
-    <Content Include="Content\jquery-plugin\timeline\images\vertical.png" />
-    <Content Include="Content\jquery-plugin\timeline\js\history.js" />
-    <Content Include="Content\jquery-plugin\timeline\js\jquery.easing.js" />
-    <Content Include="Content\jquery-plugin\timeline\js\jquery.mousewheel.js" />
     <Content Include="Content\js\HttpAction.js" />
     <Content Include="Content\js\MeetMaintenance.js" />
     <Content Include="Content\js\mtmaintenance_action.js" />
-    <Content Include="Content\showdailog\macFFBgHack.png" />
-    <Content Include="Content\showdailog\sd_close.png" />
-    <Content Include="Content\showdailog\sd_loading.gif" />
-    <Content Include="Content\showdailog\showDialog.css" />
-    <Content Include="Content\showdailog\showDialog.js" />
-    <Content Include="Content\loginstyle.css" />
     <Content Include="Content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
     <Content Include="Content\themes\base\images\ui-bg_flat_75_ffffff_40x100.png" />
     <Content Include="Content\themes\base\images\ui-bg_glass_55_fbf9ee_1x400.png" />
@@ -809,7 +795,6 @@
     <Content Include="Content\themes\base\minified\jquery.ui.tabs.min.css" />
     <Content Include="Content\themes\base\minified\jquery.ui.theme.min.css" />
     <Content Include="Global.asax" />
-    <Content Include="Content\Site.css" />
     <Content Include="Scripts\jquery-1.7.1-vsdoc.js" />
     <Content Include="Scripts\jquery-1.7.1.js" />
     <Content Include="Scripts\jquery-1.7.1.min.js" />
@@ -845,9 +830,6 @@
     <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Home\Index.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Content\jquery-plugin\demo\accordion\datagrid_data1.json" />
     <None Include="Content\jquery-plugin\demo\combobox\combobox_data1.json" />
     <None Include="Content\jquery-plugin\demo\combobox\combobox_data2.json" />
@@ -869,14 +851,7 @@
     <None Include="Content\jquery-plugin\demo\tree\tree_data2.json" />
     <Content Include="generalHandler\loginproc.ashx" />
     <Content Include="Views\Home\admin.cshtml" />
-    <Content Include="Views\Home\menu.cshtml" />
-    <Content Include="Views\Home\lanmu_Menu.cshtml" />
-    <Content Include="Views\Home\grid.cshtml" />
-    <Content Include="Views\Home\TimeLine.cshtml" />
     <Content Include="Views\Meet\Index.cshtml" />
-    <Content Include="Views\Meet\List.cshtml" />
-    <Content Include="Views\Meet\New.cshtml" />
-    <Content Include="Views\Meet\getList.cshtml" />
     <Content Include="Views\Meet\ListDetail.cshtml" />
     <Content Include="Views\Account\Login.cshtml" />
     <Content Include="Views\MeetMaintenance\Index.cshtml" />

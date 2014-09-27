@@ -42,11 +42,6 @@ namespace Sys_Meeting.Controllers
             }
         }
 
-        //[HttpGet]
-        //public ActionResult List()
-        //{
-        //    return View("List");
-        //}
         public bool CheckIsLogin()
         {
             if (Session["userid"] == null)
@@ -128,50 +123,6 @@ namespace Sys_Meeting.Controllers
                 }
             }
             return Json(new { result = returnSuc, errmsg = sErrmsg });
-            //return Json("result:" + result);
-            //if (string.IsNullOrEmpty(meetListModels.ListName))
-            //{
-            //    ModelState.AddModelError("ListNameLoss","請輸入事項標題!");
-            //    return View(meetListModels);
-            //}
-            //return Content(meetListModels.ListId);
-            //return View("ListDetail");
-        }
-
-        //[HttpPost]
-        //public ActionResult List(string listId,string listName)
-        //{
-        //    string connString = SqlHelper.ReportCentreConnectionString;
-        //    //int page=1,int rows=1
-        //    string sql = "";
-        //    sql = "select * from(";
-        //    sql += "select top (@pagenum * @pagesize) ROW_NUMBER() OVER (ORDER BY wor_id) AS rownum, wor_id id,ful_name name,age FROM empmas WHERE wor_num like 'ab%'";
-        //    sql += ") as tb";
-        //    sql += " where rownum between ( @pagenum - 1 )* @pagesize + 1 AND (@pagenum*@pagesize) order by rownum";
-
-        //    //string sql = "select top 1000 wor_id as id,FUL_NAME as [name],age from empmas";
-        //    int page = 1;
-        //    int rows = 10;
-
-        //    DataSet ds = SqlHelper.ExecuteDataset(connString, CommandType.Text, sql, new SqlParameter("@pagesize", rows), new SqlParameter("@pagenum", page));
-        //    //SqlDataReader dr = UGSC.ReportCentre.Services.SqlHelper.ExecuteReader(connString, CommandType.Text, "select top 1 * from empmas");
-        //    int dscount = ds.Tables[0].Rows.Count;
-        //    //string json = JsonConvert.SerializeObject(ds, Formatting.None);
-
-        //    string json = DataTableConvertJson.Dataset2Json(ds);
-
-
-        //    //json = dt.ToJson();// Json(dt).ToString();
-        //    json = "{\"total\":30,\"rows\":" + json + "}";
-
-        //    string content = listId+ listName;
-        //    //return View("List");
-        //    return Content(json);
-        //}
-
-        public ActionResult New()
-        {
-            return View("New");
         }
 
         //獲取事項列表

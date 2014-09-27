@@ -39,58 +39,14 @@
     </div>
     @*左側導航菜單開始*@
     <div region="west" split="true" title="导航菜单" style="width: 200px;">
-        <div id="aa" class="easyui-accordion" style="position: absolute; top: 27px; left: 0px;
-            right: 0px; bottom: 0px;" fit="true">
-            @*<div title="會議維護" iconcls="icon-save" style="overflow: auto; padding: 10px;" selected="true">
-                <ul class="easyui-tree" data-options="url:'../../Content/jquery-plugin/tree_data2.json',method:'get',animate:true">*@
-                    @*<li><span>博客中心</span>
-                        <ul>
-                            <li><span>博客地址</span>
-                                <ul>
-                                    <li><span><a target="mainFrame" href="http://www.baidu.com">审核博客</a></span> </li>
-                                    <li><span><a href="#">File 12</a></span> </li>
-                                    <li><span>刪除博客</span> </li>
-                                </ul>
-                            </li>
-                            <li><span iconCls="icon-save">博文列表</span> </li>
-                            <li><span>採集博客</span> </li>
-                        </ul>
-                    </li>
-                    <li><span><a href="#">退出管理</a></span> </li>*@
-
-                @*</ul>
-            </div>
-            <div title="新闻管理" iconcls="icon-reload" style="padding: 10px;">
-                content2
-            </div>
-            <div title="资源管理">
-                content3
-            </div>
-            <div title="用戶管理" iconcls="icon-man">
-                <ul class="nav">
-                    <li>
-                        <div class="">
-                            <a href="javascript:void(0);"><span class="icon-users icon"></span>權限管理</a></div>
-                    </li>
-                    <li><a href="javascript:void(0);">用戶添加</a></li>
-                    <li><a href="javascript:void(0);">用戶查詢</a></li>
-                    <li><a href="javascript:void(0);">刪除用戶</a></li>
-                </ul>
-            </div>
-            <div title="系統管理" data-options="iconCls:'icon-wrench-screwdriver'">
-                <div class="nav-item">
-                    <a href="javascript:addTab('设备维修')"><span>设备维修</span> </a>
-                </div>
-            </div>
-            *@
-
+        <div id="aa" class="easyui-accordion" style="position: absolute; top: 27px; left: 0px;right: 0px; bottom: 0px;" fit="true">
             @*左侧菜单S*@
             <div title="會議維護" iconcls="icon-man" selected="true">
                 <div class="lanmu-content">
                     <ul class="lanmu-list">
-                        <li><a href="/meet/ListDetail/" target="mainFrame" class="current" title="會議事項維護">會議事項維護</a></li>
-                        <li><a href="/MeetMaintenance/index" target="mainFrame" title="會議申請維護">會議申請維護</a></li>
-                        <li><a href="/MeetMaintenance/testsavegrid" target="mainFrame" title="會議總結維護">會議總結維護</a></li>
+                        <li><a href="~/meet/listdetail/" target="mainFrame" class="current" title="會議事項維護">會議事項維護</a></li>
+                        <li><a href="~/meetmaintenance/index" target="mainFrame" title="會議申請維護">會議申請維護</a></li>
+                        <li><a href="~/meetmaintenance/testsavegrid" target="mainFrame" title="會議總結維護">會議總結維護</a></li>
                     </ul>
                     @*<a class="listmore" style="display: none;" href="javascript:;">查看更多 ↓</a>*@
                 </div>
@@ -99,16 +55,6 @@
             <div title="會議查詢" iconcls="icon-search">
                 <div class="lanmu-content">
                     <ul class="lanmu-list">
-                        @*<li><a href='javascript:void(0);' class='current' title="焦点幻灯">焦点幻灯</a></li>
-                        <li><a target="mainFrame" href='http://www.baidu.com/' title="触屏特效" catgroyid="001">触屏特效</a></li>
-                        <li><a target="mainFrame" href='http://www.jd.com' title="触屏特效" catgroyid="002">触屏特效</a></li>
-                        <li><a target="mainFrame" href='http://www.360.cn' title="相册特效">相册特效</a></li>
-                        <li><a href='javascript:void(0);' title="图片特效">图片特效</a></li>
-                        <li><a target="mainFrame" href='/home/grid/1' title="文字特效" catgroyid="003">文字特效</a></li>
-                        <li><a href='javascript:void(0);' title="窗口图层">窗口图层</a></li>
-                        <li><a href='javascript:void(0);' title="表格表单">表格表单</a></li>
-                        <li><a href='javascript:void(0);' title="JSHTML5/CSS3">HTML5/CSS3</a></li>
-                        <li><a href='javascript:void(0);' title="JS其他代码">其他代码</a></li>*@
                         <li><a href='javascript:void(0);' target='mainFrame' title='會議記錄查詢'>會議記錄查詢</a></li>
                     </ul>
                     @*<a class="listmore" style="display: none;" href="javascript:;">查看更多 ↓</a>*@

@@ -18,7 +18,7 @@ namespace Sys_Meeting.Controllers
 
         public ActionResult Index()
         {
-            return View();
+            return Content("");
         }
 
         public ActionResult Login()

@@ -167,43 +167,15 @@ namespace Sys_Meeting.Controllers
     {
         //
         // GET: /Home/
-
-
-
-
-
         public ActionResult Index()
         {
-            ViewData["key"] = "this is viewdata value";
-            return View();
+            //ViewData["key"] = "this is viewdata value";
+            return Content("");
         }
         public ActionResult Admin()
         {
-
             return View("admin");
         }
-
-        public ActionResult menu()
-        {
-            return View("menu");
-        }
-
-        public ActionResult lanmu_Menu()
-        {
-            return View("lanmu_Menu");
-        }
-
-        public ActionResult grid(string id, string name)
-        {
-            //Response.Write("id:" + id + ",name:" + name);
-            return View("grid");
-        }
-
-        public ActionResult TimeLine()
-        {
-            return View("TimeLine");
-        }
-
 
         public ActionResult GetJson(int page,int rows)
         {
