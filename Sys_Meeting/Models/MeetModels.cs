@@ -38,55 +38,79 @@ namespace Sys_Meeting.Models
         public string ListAction { get; set; }
 
         public string ListSysId { get; set; }
+
+        public int CK { get; set; }
     }
 
+    [Serializable]
     public class MeetMaintenanceModels
     {
         //系統ID
-        public string SysId { get; set; }
+        [Required]
+        public string sysid { get; set; }
+
         //會議編號
         [Display(Name = "會議編號")]
         [Required]
-        public string MtId { get; set; }
+        public string id { get; set; }
 
         //會議日期
         [Display(Name = "會議日期")]
         [Required]
-        public string MtDte { get; set; }
+        public string date { get; set; }
 
         //會議時間
         [Display(Name = "會議時間")]
         [Required]
-        public string MtTime { get; set; }
+        public string time { get; set; }
 
         //會議地點
         [Display(Name = "會議地點")]
         [Required]
-        public string MtAddr { get; set; }
+        public string addr { get; set; }
 
         //主席
         [Display(Name = "主席")]
         [Required]
-        public string MtMasters { get; set; }
+        public string master { get; set; }
 
         //出席會議人員
         [Display(Name = "出席")]
         [Required]
-        public string MtJoins { get; set; }
+        public string joins { get; set; }
 
         //缺席人員
         [Display(Name = "缺席人員")]
-        public string MtUnJoins { get; set; }
+        public string unjoins { get; set; }
 
         //會議名稱
         [Display(Name = "會議名稱")]
         [Required]
-        public string MtTitle { get; set; }
+        public string name { get; set; }
 
         //共享指定人員
-        public string MtShareList { get; set; }
+        public string sharelist { get; set; }
         //public List<string> GuidList;
 
+        [Required]
+        public string action { get; set; }
+
+        public List<MeetListContent> listitems { get; set; }
+
+        public List<AccountModels> listmasters { get; set; }
+        public List<AccountModels> listjoins { get; set; }
+        public List<AccountModels> listunjoins { get; set; }
+        public List<AccountModels> listsharelists { get; set; }
+
+}
+
+    [Serializable]
+    public class MeetListContent
+    {
+        public string content { get; set; }
+        public string listsysid { get; set; }
+        public string meetsysid { get; set; }
+        public string title { get; set; }
     }
 
 }

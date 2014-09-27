@@ -1,0 +1,114 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>TestSaveGrid</title>
+</head>
+<body>
+    <script type="text/javascript">
+        $(function () {
+            var $dg = $("#dg");
+            $dg.datagrid({
+                url: "servlet/list",
+                width: 700,
+                height: 250,
+                columns: [[{
+                    field: 'code',
+                    title: 'Code',
+                    width: 100,
+                    editor: "validatebox"
+                }, {
+                    field: 'name',
+                    title: 'Name',
+                    width: 200,
+                    editor: "validatebox"
+                }, {
+                    field: 'price',
+                    title: 'Price',
+                    width: 200,
+                    align: 'right',
+                    editor: "numberbox"
+                }]],
+                toolbar: [{
+                    text: "添加",
+                    iconCls: "icon-add",
+                    handler: function () {
+                        $dg.datagrid('appendRow', {});
+                        var rows = $dg.datagrid('getRows');
+                        $dg.datagrid('beginEdit', rows.length - 1);
+                    }
+                }, {
+                    text: "编辑",
+                    iconCls: "icon-edit",
+                    handler: function () {
+                        var row = $dg.datagrid('getSelected');
+                        if (row) {
+                            var rowIndex = $dg.datagrid('getRowIndex', row);
+                            $dg.datagrid('beginEdit', rowIndex);
+                        }
+                    }
+                }, {
+                    text: "删除",
+                    iconCls: "icon-remove",
+                    handler: function () {
+                        var row = $dg.datagrid('getSelected');
+                        if (row) {
+                            var rowIndex = $dg.datagrid('getRowIndex', row);
+                            $dg.datagrid('deleteRow', rowIndex);
+                        }
+                    }
+                }, {
+                    text: "结束编辑",
+                    iconCls: "icon-cancel",
+                    handler: endEdit
+                }, {
+                    text: "保存",
+                    iconCls: "icon-save",
+                    handler: function () {
+                        endEdit();
+                        if ($dg.datagrid('getChanges').length) {
+                            var inserted = $dg.datagrid('getChanges', "inserted");
+                            var deleted = $dg.datagrid('getChanges', "deleted");
+                            var updated = $dg.datagrid('getChanges', "updated");
+
+                            var effectRow = new Object();
+                            if (inserted.length) {
+                                effectRow["inserted"] = JSON.stringify(inserted);
+                            }
+                            if (deleted.length) {
+                                effectRow["deleted"] = JSON.stringify(deleted);
+                            }
+                            if (updated.length) {
+                                effectRow["updated"] = JSON.stringify(updated);
+                            }
+
+                            $.post("servlet/commit", effectRow, function (rsp) {
+                                if (rsp.status) {
+                                    $.messager.alert("提示", "提交成功！");
+                                    $dg.datagrid('acceptChanges');
+                                }
+                            }, "JSON").error(function () {
+                                $.messager.alert("提示", "提交错误了！");
+                            });
+                        }
+                    }
+                }]
+            });
+
+            function endEdit() {
+                var rows = $dg.datagrid('getRows');
+                for (var i = 0; i < rows.length; i++) {
+                    $dg.datagrid('endEdit', i);
+                }
+            }
+        });
+</script>
+<body>
+	<table id="dg" title="批量操作"></table>
+</body>
+</html>

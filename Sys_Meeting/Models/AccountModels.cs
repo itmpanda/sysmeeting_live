@@ -16,5 +16,10 @@ namespace Sys_Meeting.Models
         [DataType(DataType.Password)]
         [Display(Name = "密碼")]
         public string PassWord { get; set; }
+
+        //全稱
+        public string FulName { get; set; }
+
+        public int CK { get; set; }
     }
 }

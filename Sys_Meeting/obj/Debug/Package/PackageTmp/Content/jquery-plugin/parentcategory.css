@@ -1,0 +1,89 @@
+﻿.footer
+{
+    width: 100%;
+    text-align: center;
+    line-height: 35px;
+}
+        
+.top-bg
+{
+    background-color: #c3d9e0;
+    height: 80px;
+    /*background-image:-webkit-linear-gradient(270deg, #c3d9e0, #000);*/
+    background-image:-webkit-linear-gradient(to right, #6caef5, #c3d9e0);
+	background-image:linear-gradient(to right, #6caef5,#c3d9e0);
+}
+
+div.top-bg li {
+	padding-top: 10px;
+	padding-left: 10px;
+}
+        
+.nav
+{
+    width: 213px;
+    padding: 40px 28px 25px 0;
+}
+        
+ul.nav
+{
+    padding: 0;
+    margin: 0;
+    line-height: 1.5em;
+    list-style: none;
+}
+ul.nav li
+{
+}
+ul.nav li a
+{
+    line-height: 10px;
+    font-size: 14px;
+    padding: 10px 5px;
+    color: #000;
+    display: block;
+    text-decoration: none;
+    font-weight: bolder;
+}
+ul.nav li a:hover
+{
+    background-color: #675C7C;
+    color: white;
+}
+ul.nav ul
+{
+    margin: 0;
+    padding: 0;
+    display: none;
+}
+ul.nav ul li
+{
+    margin: 0;
+    padding: 0;
+    clear: both;
+}
+ul.nav ul li a
+{
+    padding-left: 20px;
+    font-size: 12px;
+    font-weight: normal;
+}
+ul.nav ul li a:hover
+{
+    background-color: #D3C99C;
+    color: #675C7C;
+}
+ul.nav ul ul li a
+{
+    color: silver;
+    padding-left: 40px;
+}
+ul.nav ul ul li a:hover
+{
+    background-color: #D3CEB8;
+    color: #675C7C;
+}
+ul.nav span
+{
+    float: right;
+}

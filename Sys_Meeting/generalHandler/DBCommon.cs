@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
+using System.Diagnostics;
 using System.Linq;
 using System.Web;
 
@@ -42,6 +45,34 @@ namespace Sys_Meeting.generalHandler
             sql += ") as tb";
             sql += " where rownum between ( @pagenum - 1 )* @pagesize + 1 AND (@pagenum*@pagesize) order by rownum";
             return sql;
+        }
+
+        public static bool BulkToDB(SqlConnection sqlConnection, SqlTransaction sqlTransaction, DataTable dt, string tb,
+            out string sMsg)
+        {
+            bool retval = true;
+            sMsg = null;
+            SqlBulkCopy bulkCopy = new SqlBulkCopy(sqlConnection, SqlBulkCopyOptions.Default, sqlTransaction);
+            bulkCopy.DestinationTableName = tb;
+            bulkCopy.BatchSize = dt.Rows.Count;
+
+            try
+            {
+                if (dt != null && dt.Rows.Count != 0)
+                    bulkCopy.WriteToServer(dt);
+            }
+            catch (Exception ex)
+            {
+                retval = false;
+                sMsg = ex.Message;
+                throw ex;
+            }
+            finally
+            {
+                if (bulkCopy != null)
+                    bulkCopy.Close();
+            }
+            return retval;
         }
     }
 }

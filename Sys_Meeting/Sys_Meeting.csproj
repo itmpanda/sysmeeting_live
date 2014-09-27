@@ -123,6 +123,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\DGridTitleController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ListController.cs" />
     <Compile Include="Controllers\MeetController.cs" />
@@ -744,7 +745,9 @@
     <Content Include="Content\jquery-plugin\timeline\js\history.js" />
     <Content Include="Content\jquery-plugin\timeline\js\jquery.easing.js" />
     <Content Include="Content\jquery-plugin\timeline\js\jquery.mousewheel.js" />
+    <Content Include="Content\js\HttpAction.js" />
     <Content Include="Content\js\MeetMaintenance.js" />
+    <Content Include="Content\js\mtmaintenance_action.js" />
     <Content Include="Content\showdailog\macFFBgHack.png" />
     <Content Include="Content\showdailog\sd_close.png" />
     <Content Include="Content\showdailog\sd_loading.gif" />

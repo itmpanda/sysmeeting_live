@@ -73,9 +73,34 @@ namespace Sys_Meeting.Controllers
             }
         }
 
+        [HttpGet]
         public ActionResult Search()
         {
             return View();
+        }
+
+        [HttpPost]
+        public ActionResult Search(string id)
+        {
+            string sql = "";
+            sql = DbCommon.GetPageSql("tb_user", "wor_num ,ful_name", "wor_num");
+            DataSet ds = SqlHelper.ExecuteDataset(DbCommon.GConnectionString, CommandType.Text, sql
+                , new SqlParameter("@pagenum", 1)
+                , new SqlParameter("@pagesize", DbCommon.GetPageSize));
+
+            List<AccountModels> listRows = new List<AccountModels>();
+            foreach (DataRow dr in ds.Tables[0].Rows)
+            {
+                listRows.Add(new AccountModels()
+                {
+                    CK = 0,
+                    UserId = dr["wor_num"].ToString(),
+                    FulName = dr["ful_name"].ToString()
+                });
+            }
+
+            return Json(new { total = 30, rows = listRows });
+            //return View();
         }
 
         //搜索帳戶
