@@ -90,6 +90,7 @@ function addPanels(o, title, content, id) {
     $(o).accordion('add', {
         title: title,
         content: '<div style="padding:1px;overflow:auto;" id="listdetail"><textarea cols="100" rows="4" data-listsysid="' + id + '">' + content + '</textarea></div>'
+        //content: '<div style="padding:1px;overflow:auto;" id="listdetail"><div data-listsysid="' + id + '">' + content + '</div></div>'
     });
     idx++;
 };

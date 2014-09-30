@@ -495,11 +495,6 @@ namespace Sys_Meeting.Controllers
             return retval;
         }
 
-        public ActionResult TestSaveGrid()
-        {
-            return View();
-        }
-
         public ActionResult GetGUID()
         {
             //前臺和后臺的的GUID匹配，一致就保存
@@ -522,7 +517,6 @@ namespace Sys_Meeting.Controllers
         //{
         //    return Content(MtList.Contains(guid).ToString());
         //}
-
 
     }
 }

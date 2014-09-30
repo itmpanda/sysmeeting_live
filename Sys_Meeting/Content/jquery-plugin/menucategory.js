@@ -1,4 +1,9 @@
-﻿//作用：
+﻿
+window.onload = function () {
+    $('#loading-mask').fadeOut();
+}
+
+//作用：
 //当点击li栏目菜单时替换颜色及当>5个栏目项时可折叠栏目和查看
 var LanMu = $(".lanmu-list");
 var lanMuSun = LanMu.children('li');

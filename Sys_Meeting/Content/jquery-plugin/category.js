@@ -1,5 +1,8 @@
 ﻿//主要作用用于点击左侧菜单时，在center region中添加一个tab标签
 $(document).ready(function() {
+    
+    tabCloseEven();
+
     $('.easyui-accordion li a').click(function() {
         var tabTitle = $(this).text();
         var url = $(this).attr("href");

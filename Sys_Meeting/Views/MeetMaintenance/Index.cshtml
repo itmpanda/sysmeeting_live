@@ -21,9 +21,12 @@
   
     <script src="../../Content/jquery-plugin/jquery.easyui.min.js" type="text/javascript"></script>
     <script src="../../Content/jquery-plugin/locale/easyui-lang-zh_TW.js" type="text/javascript"></script>
-
+    <script src="../../Content/jquery-plugin/category.js" type="text/javascript"></script>
+    <script src="../../Content/js/CommonAction.js" type="text/javascript"></script>
+    <script src="../../Content/js/HttpAction.js" type="text/javascript"></script>
 </head>
     <body>
+        
         <br/>
         @*>--操作搜索*@
         <div id="meetlistcontent">
@@ -42,6 +45,7 @@
             <input type="button" value="新增" id="btnCreate"/>
             <input type="button" value="修改" id="btnEdit"/>
             <input type="button" value="刪除" id="btnDelete"/>
+            
         </div>
         @*操作搜索--<*@
         
@@ -127,7 +131,7 @@
             @*</div>*@
             
             
-            <div id="meetlistpanels" class="easyui-accordion" @*data-options="multiple:true"*@ style="width:80%;height:300px;">
+            <div id="meetlistpanels" class="easyui-accordion" @*data-options="multiple:true"*@>
                 @*<div title="事項1" data-options="iconCls:'icon-ok'" style="overflow:auto;padding:1px;">*@
                 @*<p>事項內容</p>
                     <a href="javascript:void(0)" class="easyui-linkbutton" iconcls="icon-add" id="btnAddPanels2" onclick="addPanels()" style="margin-bottom: 20px;">添加</a>
@@ -155,7 +159,7 @@
             var mode = '';
             var panelIdx = 1;
             var curOpenSearchName = '';
-
+            var URLGUID = '/meetmaintenance/getguid';
             //>--搜索模塊****************************************************************//
             //****************************************************************
 
@@ -177,10 +181,6 @@
                 $(curOpenSearchName + '_f').val(f2);
 
                 CloseDialog('#acc-search-form');
-            }
-
-            function CloseDialog(o) {
-                $(o).dialog('close');
             }
 
             //返回值為表格的選擇行，數組類型
@@ -215,23 +215,7 @@
                 });
             }
 
-            function PushFieldValue(t,f) {
-                var f1 = '', f2 = '';
-                if (t == 'list') {
-                    f1 = 'ListSysId';
-                    f2 = 'ListName';
-                }
-                else if (t == 'account') {
-                    f1 = 'UserId';
-                    f2 = 'FulName';
-                }
-                if (f == 'id') {
-                    return f1;
-                }
-                else if (f == 'name') {
-                    return f2;
-                }
-            }
+            
 
             //o:返回的值寫在哪個控件
             //t:查詢的類型
@@ -275,7 +259,16 @@
 
                 $("#txtId").removeAttr("disabled");
                 $('#txtAction').val(mode);
-                GetGuid();
+                
+                GetRequest(URLGUID, '', function(ret) {
+                    if (ret.result != '1') {
+                        $.messager.alert('提示', '系統異常，不能添加新記錄!', 'info');
+                        return false;
+                    } else {
+                        $('#txtSysId').val(ret.sysid);
+                    }
+                });
+
                 var d = '#add-list-proc';
                 var u = '/meetmaintenance/action';
                 openDailog(d, u, function() {
@@ -295,16 +288,9 @@
                 }
                 $("#txtId").attr("disabled", "disabled");
                 Edit('#dg');
-//                $("#txtId").attr("disabled", "disabled");
                 mode = 'edit';
-
-//                ClearValue('#add-list-proc input');
-
-//                $("#txtId").removeAttr("disabled");
                 $('#txtAction').val(mode);
-////                GetGuid();
-//                //                if (CheckIsSave()) {
-//                //var o = new ContainerModel();
+
                 var d = '#add-list-proc';
                 var u = '/meetmaintenance/edit/';
                 openDailog(d, u, function() {
@@ -313,37 +299,8 @@
                     $('#add-list-proc').dialog('close');
                     removeAllPanel('#meetlistpanels');
                 });
+                return true;
             });
-
-            
-
-            function Delete(o,u) {
-                var row = $(o).datagrid('getSelected');
-                if (row) {
-                    $.messager.confirm('提示', '確定要刪除此記錄', function (data) {
-                        if (data) {
-                            var index = $(o).datagrid('getRowIndex', row);
-                            $.ajax({
-                                url: u+row.sysid,
-                                type: 'get',
-                                success: function(r) {
-                                    if (r.result > '0') {
-                                        $.messager.alert('提示', '刪除成功！', 'info',function() {
-                                            $(o).datagrid('deleteRow', index);
-                                        });
-                                        
-                                    } else {
-                                        $.messager.alert('提示', r.errmsg, 'info');
-                                    }
-
-                                }
-                            });
-                        }
-                    });
-                } else {
-                    $.messager.alert('提示', '請選擇要刪除的記錄','info');
-                }
-            }
 
             //刪除
             $('#btnDelete').click(function () {
@@ -407,13 +364,6 @@
                 });
             }
 
-            function HandlerDone() {
-                ClearValue('#add-list-proc input');
-                $('#dg').datagrid('reload');
-                $('#add-list-proc').dialog('close');
-//                alert('HandlerDone');
-            }
-
             function openDailog(d, u, fn) {
                 $(d).show().dialog({
                     modal: true,
@@ -474,23 +424,6 @@
                 });
             };
 
-            function GetGuid() {
-                $.ajax({
-                    url: '/meetmaintenance/getguid',
-                    //type: 'get',
-                    success: function (data) {
-                        //alert(data);
-                        if (data.result != '1') {
-                            $.messager.alert('提示', '系統異常!', 'info');
-                            return false;
-                        } else {
-                            $('#txtSysId').val(data.sysid);
-                            return true;
-                        }
-                    }
-                });
-            }
-
             function GetValues() {
                 
                 $('#meetlistpanels textarea').each(function() {
@@ -508,21 +441,11 @@
 
             $(function () {
                 initWndData();
+                InitSearchCombox();
             });
 
             function initWndData() {
-                //下拉選擇框
-                $('#cc').combo({
-                    required: true,
-                    editable: false
-                });
-                $('#sp').appendTo($('#cc').combo('panel'));
-                $('#sp input').click(function () {
-                    var v = $(this).val();
-                    var s = $(this).next('span').text();
-                    $('#cc').combo('setValue', v).combo('setText', s).combo('hidePanel');
-                });
-
+                
                 //初始化表格數據
                 $('#dg').datagrid({
                     url: '/meetmaintenance/getmeet',

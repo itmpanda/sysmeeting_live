@@ -1,0 +1,208 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+    
+    <link rel="shortcut icon" href="../../Content/favicon.ico" type="image/x-icon" />
+    <link href="../../Content/jquery-plugin/themes/metro/easyui.css" rel="stylesheet"
+        type="text/css" />
+    <link href="../../Content/jquery-plugin/themes/icon.css" rel="stylesheet" type="text/css" />
+    <link href="../../Content/jquery-plugin/demo/demo.css" rel="stylesheet" type="text/css" />
+
+
+    <script type="text/javascript" src="~/Scripts/jquery-1.7.1.min.js"></script>
+  
+    <script src="../../Content/jquery-plugin/jquery.easyui.min.js" type="text/javascript"></script>
+    <script src="../../Content/jquery-plugin/locale/easyui-lang-zh_TW.js" type="text/javascript"></script>
+    
+    <script src="../../Content/js/HttpAction.js" type="text/javascript"></script>
+    <script src="../../Content/js/CommonAction.js" type="text/javascript"></script>
+
+    <script src="../../Content/js/mtmaintenance_action.js" type="text/javascript"></script>
+</head>
+    
+    <body>
+        <div id="meetsearch">
+            <select id="cc" style="width: 150px;"></select>
+            <input id="txtSysId" class="easyui-textbox" data-options="prompt:'關鍵字...'," style="width: 450px; height: 24px;" />
+            <input type="text" id="txtSysId_f" value=""/>
+            <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search" id="btnQuery">搜索</a>
+            <div id="sp">
+                <div style="color: #99BBE8; background: #fafafa; padding: 5px;">請選擇查詢條件：</div>
+                <div style="padding: 10px">
+                    <input type="radio" name="lang" value="01" /><span>會議編號</span><br/>
+                </div>
+            </div>
+        </div>
+        <hr/>
+
+        <div id="div-list-panels" class="easyui-accordion">            
+        </div>
+
+        <div id="div-dailog-edit" style="display: none">
+            <table>
+                <tr>
+                    <th>報告日期：</th><td><input type="text" id="txtrptdte"/></td>
+                </tr>
+                <tr>
+                    <th>負責人：</th><td><input type="text" id="txtactperson"/><input type="text" id="txtactperson_f"/><a href="javascript:void(0)" class="easyui-linkbutton" iconcls="icon-search" onclick="OpenSearch('txtUnJoins','account')"></td>
+                </tr>
+                <tr>
+                    <th>行動：</th><td><textarea id="txtactcontent" cols="30" rows="4"></textarea></td>
+                </tr>
+                
+            </table>
+        </div>
+        
+        <div id="div-dailog-search" style="display: none">
+            
+        </div>
+        
+       
+        <script type="text/javascript">
+            $(function() {
+                InitSearchCombox();
+            });
+
+            $(document).delegate('#btn-new', 'click', function () {
+                var td = '<tr><td></td><td></td><td></td><td><a href="javascript:void(0)" class="btn-edit">修改</a>|<a href="javascript:void(0)" class="btn-del">刪除</a></td></tr>';
+                $(this).parent().parent().parent().append(td);
+            });
+
+            $(document).delegate('.btn-del', 'click', function() {
+                $(this).parents('tr').remove();
+            });
+
+            $(document).delegate('.btn-edit', 'click', function() {
+
+                ClearActionModels();
+
+                var oCols = $(this).parent().parent().children('td'); //.eq(0).text()  ;
+
+                $('#txtactperson').val(oCols.eq(0).text());
+                $('#txtactcontent').val(oCols.eq(1).text());
+                $('#txtrptdte').val(oCols.eq(2).text());
+
+                openDailog('#div-dailog-edit', '編輯', function(data) {
+                    if (data == 'save') {
+
+                        var o = new ActionModels();
+                        console.log(o.actcontent);
+                        oCols.eq(0).text(o.actperson);
+                        oCols.eq(1).html(o.actcontent);
+                        oCols.eq(2).text(o.rptdte);
+
+                    }
+                    $('#div-dailog-edit').dialog('close');
+                });
+            });
+
+            function ActionModels() {
+                var self = this;
+                self.actperson = $('#txtactperson').val();
+                self.actcontent = $('#txtactcontent').val().replace('/\n/g','<br/>');
+                self.rptdte = $('#txtrptdte').val();
+
+                //alert(self.actcontent);
+            }
+
+            function ClearActionModels() {
+                var self = this;
+
+                self.actperson = '';
+                self.actcontent = '';
+                self.rptdte = '';
+
+                $('#txtactperson').val('');
+                $('#txtactcontent').val('');
+                $('#txtrptdte').val('');
+            }
+
+            $('#btnQuery').click(function() {
+                var url = '', title = '', type = 'meet';
+                url = '/meetfinish/searchresult';
+                title = '會議查詢';
+
+                OpenSearchDailog('#div-dailog-search', title, url, function(ret) {
+                    if (ret == 'select') {
+                        var rows = $('#dgSearch').datagrid('getSelections');
+                        var id = [], name = [];
+                        for (var i = 0; i < rows.length; i++) {
+                            var row = rows[i];
+                            id.push(row[PushFieldValue(type, 'id')]);
+                            name.push(row[PushFieldValue(type, 'name')]);
+                        }
+
+                        $('#txtSysId').val(name.join(','));
+                        $('#txtSysId_f').val(id.join(','));
+                        removeAllPanel();
+                        loadlist(id.join(','));
+                    }
+                    CloseDialog('#div-dailog-search');
+                });
+
+            });
+
+            function dgDbclickCallback(rows) {
+                var f1 = '', f2 = '';
+                f1 = rows.sysid;
+                f2 = rows.name;
+
+                $('#txtSysId_f').val(f1);
+                $('#txtSysId').val(f2);
+
+                removeAllPanel();
+                loadlist(f1);
+
+                CloseDialog('#div-dailog-search');
+            }
+
+            function loadlist(sysid) {
+                GetRequest('/meetmaintenance/getmeet/' + sysid, '', function(data) {
+                    //                            alert(data.result);
+                    var ipos;
+                    var t = [], d5 = [];
+                    t = data.rows;
+
+                    for (var i = 0; i < t.length; i++) {
+                        var t2 = t[i];
+
+                        d5 = t2.listitems; //事項列表
+
+                        //事項列表
+                        for (ipos = 0; ipos < d5.length; ipos++) {
+                            var listdetail = d5[ipos];
+                            addPanels('#div-list-panels', listdetail.title, listdetail.content, listdetail.listsysid);
+                        }
+
+                        var tb = [];
+                        tb.push('<table id="dgTable' + t2.sysid + '" border="1px">');
+                        tb.push('<tr>');
+                        tb.push('<td>負責人</td>');
+                        tb.push('<td>行動</td>');
+                        tb.push('<td>報告日期</td>');
+                        tb.push('<td><a href="javascript:void(0)" id="btn-new">操作</a></td>');
+                        tb.push('</tr>');
+                        tb.push('</table>');
+
+                        $('#div-list-panels #listdetail').append(tb.join(''));
+                    }
+
+                });
+            }
+
+            function removeAllPanel() {
+                //removeAllPanel('.div-list-panels');
+                $('#div-list-panels .panel .panel-title').each(function() {
+                    $('#div-list-panels').accordion('remove', $(this).html());
+                });
+            }
+        </script>
+    </body>
+</html>

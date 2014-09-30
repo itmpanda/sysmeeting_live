@@ -28,6 +28,15 @@ namespace Sys_Meeting.Controllers
         public bool hidden { get; set; }
     }
 
+    public class MeetColumns
+    {
+        public string field { get; set; }
+        public string title { get; set; }
+        public int width { get; set; }
+        public bool checkbox { get; set; }
+        public bool hidden { get; set; }
+    }
+
     public class DGridTitleController : Controller
     {
         //
@@ -50,6 +59,19 @@ namespace Sys_Meeting.Controllers
             cols.Add(new AccountColumns() { field = "ck", title = "", width = 50, checkbox = true, hidden = false });
             cols.Add(new AccountColumns() { field = "UserId", title = "用戶編號", width = 200, checkbox = false, hidden = false });
             cols.Add(new AccountColumns() { field = "FulName", title = "名稱", width = 200, checkbox = false, hidden = false });
+
+            return Json(new { columns = cols });
+        }
+
+        public ActionResult Meet()
+        {
+            List<MeetColumns> cols = new List<MeetColumns>();
+            cols.Add(new MeetColumns() { field = "ck", title = "", width = 50, checkbox = true, hidden = false });
+            cols.Add(new MeetColumns() { field = "sysid", title = "系統編號", width = 100, checkbox = false, hidden = true });
+            cols.Add(new MeetColumns() { field = "id", title = "會議編號", width = 100, checkbox = false, hidden = false });
+            cols.Add(new MeetColumns() { field = "date", title = "會議日期", width = 100, checkbox = false, hidden = false });
+            cols.Add(new MeetColumns() { field = "time", title = "會議時間", width = 100, checkbox = false, hidden = false });
+            cols.Add(new MeetColumns() { field = "addr", title = "會議地點", width = 100, checkbox = false, hidden = false });
 
             return Json(new { columns = cols });
         }

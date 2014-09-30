@@ -127,6 +127,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ListController.cs" />
     <Compile Include="Controllers\MeetController.cs" />
+    <Compile Include="Controllers\MeetFinishController.cs" />
     <Compile Include="Controllers\MeetMaintenanceController.cs" />
     <Compile Include="generalHandler\DBCommon.cs" />
     <Compile Include="Models\AccountModels.cs" />
@@ -375,6 +376,7 @@
     <Content Include="Content\jquery-plugin\demo\window\windowlayout.html" />
     <Content Include="Content\jquery-plugin\easyloader.js" />
     <Content Include="Content\jquery-plugin\img\glyphicons-halflings-white.png" />
+    <Content Include="Content\jquery-plugin\img\loading.gif" />
     <Content Include="Content\jquery-plugin\jquery.easyui.min.js" />
     <Content Include="Content\jquery-plugin\jquery.min.js" />
     <Content Include="Content\jquery-plugin\licence_gpl.txt" />
@@ -737,6 +739,7 @@
     <Content Include="Content\jquery-plugin\themes\metro\tree.css" />
     <Content Include="Content\jquery-plugin\themes\metro\validatebox.css" />
     <Content Include="Content\jquery-plugin\themes\metro\window.css" />
+    <Content Include="Content\js\CommonAction.js" />
     <Content Include="Content\js\HttpAction.js" />
     <Content Include="Content\js\MeetMaintenance.js" />
     <Content Include="Content\js\mtmaintenance_action.js" />
@@ -855,9 +858,10 @@
     <Content Include="Views\Meet\ListDetail.cshtml" />
     <Content Include="Views\Account\Login.cshtml" />
     <Content Include="Views\MeetMaintenance\Index.cshtml" />
-    <Content Include="Views\MeetMaintenance\TestSaveGrid.cshtml" />
     <Content Include="Views\Account\Search.cshtml" />
     <Content Include="Views\List\Index.cshtml" />
+    <Content Include="Views\MeetFinish\Index.cshtml" />
+    <Content Include="Views\MeetFinish\SearchResult.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
