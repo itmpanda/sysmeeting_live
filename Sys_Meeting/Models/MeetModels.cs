@@ -111,6 +111,7 @@ namespace Sys_Meeting.Models
         public string listsysid { get; set; }
         public string meetsysid { get; set; }
         public string title { get; set; }
+        public List<ListDetailModels>  ActDetails { get; set; }
     }
 
 }

@@ -1,0 +1,60 @@
+﻿@model Sys_Meeting.Models.MeetModels
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+    <script src="~/Scripts/jquery-1.7.1.min.js"></script>
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+</head>
+<body>
+    
+    
+    @using (Html.BeginForm("add","Meet","Post")) {
+        @Html.ValidationSummary(true)
+    
+        <fieldset>
+            <legend>MeetModels</legend>
+    
+            <div class="editor-label">
+                @Html.LabelFor(model => model.Name)
+            </div>
+            <div class="editor-field">
+                @Html.EditorFor(model => model.Name)
+                @Html.ValidationMessageFor(model => model.Name)
+            </div>
+    
+            <div class="editor-label">
+                @Html.LabelFor(model => model.Addr)
+            </div>
+            <div class="editor-field">
+                @Html.EditorFor(model => model.Addr)
+                @Html.ValidationMessageFor(model => model.Addr)
+            </div>
+    
+            <div class="editor-label">
+                @Html.LabelFor(model => model.IdCard)
+            </div>
+            <div class="editor-field">
+                @Html.EditorFor(model => model.IdCard)
+                @Html.ValidationMessageFor(model => model.IdCard)
+            </div>
+    
+            <p>
+                <input type="submit" value="Create" />
+            </p>
+        </fieldset>
+    }
+    
+    <div>
+        @Html.ActionLink("Back to List", "Index")
+    </div>
+</body>
+</html>

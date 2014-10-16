@@ -124,23 +124,22 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\DGridTitleController.cs" />
+    <Compile Include="Controllers\FileController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ListController.cs" />
     <Compile Include="Controllers\MeetController.cs" />
     <Compile Include="Controllers\MeetFinishController.cs" />
     <Compile Include="Controllers\MeetMaintenanceController.cs" />
-    <Compile Include="generalHandler\DBCommon.cs" />
+    <Compile Include="Controllers\SearchController.cs" />
     <Compile Include="Models\AccountModels.cs" />
+    <Compile Include="Models\MeetFinishModels.cs" />
     <Compile Include="Models\MeetModels.cs" />
-    <Compile Include="generalHandler\SqlHelper.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\HomeModels.cs" />
+    <Compile Include="Models\SearchModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="generalHandler\loginproc.ashx.cs">
-      <DependentUpon>loginproc.ashx</DependentUpon>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\favicon.ico" />
@@ -378,6 +377,7 @@
     <Content Include="Content\jquery-plugin\img\glyphicons-halflings-white.png" />
     <Content Include="Content\jquery-plugin\img\loading.gif" />
     <Content Include="Content\jquery-plugin\jquery.easyui.min.js" />
+    <Content Include="Content\jquery-plugin\jquery.form.js" />
     <Content Include="Content\jquery-plugin\jquery.min.js" />
     <Content Include="Content\jquery-plugin\licence_gpl.txt" />
     <Content Include="Content\jquery-plugin\load-metro.js" />
@@ -467,6 +467,7 @@
     <Content Include="Content\jquery-plugin\src\jquery.slider.js" />
     <Content Include="Content\jquery-plugin\src\jquery.tabs.js" />
     <Content Include="Content\jquery-plugin\src\jquery.window.js" />
+    <Content Include="Content\jquery-plugin\style\Table.css" />
     <Content Include="Content\jquery-plugin\themes\black\accordion.css" />
     <Content Include="Content\jquery-plugin\themes\black\calendar.css" />
     <Content Include="Content\jquery-plugin\themes\black\combo.css" />
@@ -743,6 +744,7 @@
     <Content Include="Content\js\HttpAction.js" />
     <Content Include="Content\js\MeetMaintenance.js" />
     <Content Include="Content\js\mtmaintenance_action.js" />
+    <Content Include="Content\js\style.js" />
     <Content Include="Content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
     <Content Include="Content\themes\base\images\ui-bg_flat_75_ffffff_40x100.png" />
     <Content Include="Content\themes\base\images\ui-bg_glass_55_fbf9ee_1x400.png" />
@@ -814,7 +816,9 @@
     <Content Include="Scripts\knockout-2.1.0.js" />
     <Content Include="Scripts\modernizr-2.5.3.js" />
     <Content Include="Scripts\_references.js" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
@@ -852,7 +856,6 @@
     <None Include="Content\jquery-plugin\demo\treegrid\treegrid_data3.json" />
     <None Include="Content\jquery-plugin\demo\tree\tree_data1.json" />
     <None Include="Content\jquery-plugin\demo\tree\tree_data2.json" />
-    <Content Include="generalHandler\loginproc.ashx" />
     <Content Include="Views\Home\admin.cshtml" />
     <Content Include="Views\Meet\Index.cshtml" />
     <Content Include="Views\Meet\ListDetail.cshtml" />
@@ -862,6 +865,16 @@
     <Content Include="Views\List\Index.cshtml" />
     <Content Include="Views\MeetFinish\Index.cshtml" />
     <Content Include="Views\MeetFinish\SearchResult.cshtml" />
+    <Content Include="Views\Account\Chgpwd.cshtml" />
+    <Content Include="Views\Shared\Header.cshtml" />
+    <Content Include="Views\Shared\Footer.cshtml" />
+    <Content Include="Views\Meet\Search.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DBCommon\DBCommon.csproj">
+      <Project>{EF1561A6-60EC-4C0B-8607-395D6E38A6B5}</Project>
+      <Name>DBCommon</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
@@ -879,7 +892,7 @@
         <WebProjectProperties>
           <UseIIS>False</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>37592</DevelopmentServerPort>
+          <DevelopmentServerPort>52711</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
           <IISUrl>
           </IISUrl>

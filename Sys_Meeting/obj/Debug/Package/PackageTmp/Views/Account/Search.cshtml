@@ -1,0 +1,67 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Search</title>
+</head>
+    <body>
+        <table id="dgSearch"></table>
+        <script type="text/javascript">
+
+            $(function () {
+                var columns = new Array();
+                var cols = new Array();
+                var colData = new Object();
+
+                $.ajax({
+                    url: '/dgridtitle/account',
+                    type: 'post',
+                    dataType: 'json',
+                    success: function (data) {
+                        if (data.columns != null) {
+                            $.each(data.columns, function () {
+
+                                colData = new Object();
+                                colData.checkbox = this.checkbox;
+                                colData.field = this.field;
+                                colData.title = this.title;
+                                colData.width = this.width;
+                                colData.hidden = this.hidden;
+                                cols.push(colData);
+                            });
+                        };
+                        columns.push(cols);
+
+                        var gridCfg = {
+                            fit: true,
+                            url: '/account/search',
+                            nowrap: true,
+                            border: false,
+                            striped: true,
+                            pagination: true,
+                            pageSize: 10,
+                            rownumbers: true,
+                            singleSelect: false,
+                            columns: columns,
+                            fitColumns: false,
+                            onLoadSuccess: function (dt) {
+                            },
+                            onDblClickRow: function (idx, rd) {
+                                //alert(idx+','+rd.ListId);//返回選擇的行，交給囘調函數處理
+                                SetDGSelections(rd, 'account');
+                            }
+                        };
+                        $('#dgSearch').datagrid(gridCfg);
+                    }
+                });
+
+
+            });
+        </script>
+    </body>
+</html>

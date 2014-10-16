@@ -5,7 +5,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-using Sys_Meeting.generalHandler;
+
 using Sys_Meeting.Models;
 
 namespace Sys_Meeting.Controllers
@@ -48,7 +48,7 @@ namespace Sys_Meeting.Controllers
             cols.Add(new ListColumns() { field = "ck", title = "", width = 50, checkbox = true, hidden = false });
             cols.Add(new ListColumns() { field = "ListSysId", title = "ListSysId", width = 1, checkbox = false, hidden = true });
             cols.Add(new ListColumns() { field = "ListId", title = "事項編號", width = 100, checkbox = false, hidden = false });
-            cols.Add(new ListColumns() { field = "ListName", title = "事項標題", width = 200, checkbox = false, hidden = false });
+            cols.Add(new ListColumns() { field = "ListName", title = "事項名稱", width = 200, checkbox = false, hidden = false });
 
             return Json(new {columns = cols});
         }

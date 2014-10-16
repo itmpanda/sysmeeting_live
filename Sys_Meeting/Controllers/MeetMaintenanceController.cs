@@ -4,7 +4,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Text;
 using System.Web.Mvc;
-using Sys_Meeting.generalHandler;
+
 using Sys_Meeting.Models;
 
 namespace Sys_Meeting.Controllers
@@ -25,19 +25,14 @@ namespace Sys_Meeting.Controllers
             Join,
             UnJoin,
             Share,
-            MeetList
+            MeetList,
+            ActDetail
         }
         //
         // GET: /MeetMaintenance/
         public ActionResult Index()
         {
             return View();
-        }
-
-        [HttpPost]
-        public ActionResult GetMeet(MeetMaintenanceModels meetMaintenanceModels)
-        {
-            return Json(new {result = "0"});
         }
 
         ///<summary>
@@ -49,110 +44,174 @@ namespace Sys_Meeting.Controllers
         public ActionResult GetMeet()
         {
 
-            string sysid = Request.RequestContext.RouteData.Values["id"] == null ? "" : Request.RequestContext.RouteData.Values["id"].ToString();
-            
-            StringBuilder sql = new StringBuilder();
-            sql.Append("select * from(");
-            sql.Append("select top (@pagenum * @pagesize) ROW_NUMBER() OVER (ORDER BY sys_dte) AS rownum, sys_id,mt_id,");
-            sql.Append("title,mt_dte,mt_time,addr from tb_meet WHERE 1=1 and is_del=0 ");
-            sql.Append(sysid == "" ? "" : " and sys_id='"+sysid+"'");
-            sql.Append(") as tb");
-            sql.Append(" where rownum between ( @pagenum - 1 )* @pagesize + 1 AND (@pagenum*@pagesize) order by rownum");
+            string meetsysid = Request.RequestContext.RouteData.Values["id"] == null ? "" : Request.RequestContext.RouteData.Values["id"].ToString();
 
+            string errmsg = "";
+            bool ret = false;
+
+            StringBuilder sql = new StringBuilder();
+            String countsql = "select count(1) totalrows from tb_meet WHERE 1=1 and is_del=0";
+
+            sql.Append("select @pagemark sys_id,mt_id,title,convert(varchar(10),mt_dte,101) mt_dte,mt_time,addr from tb_meet WHERE 1=1 and is_del=0 ");
+            sql.Append(meetsysid == "" ? "" : " and sys_id=''"+meetsysid+"''");
+
+            string execsql = "exec sp_getPageData '" + sql.ToString() + "',sys_id,@pagenum,@pagesize";
             int page = 1;
             int rows = 10;
-            
-            DataSet ds = SqlHelper.ExecuteDataset(DbCommon.GConnectionString, CommandType.Text, sql.ToString()
-                , new SqlParameter("@pagesize", rows)
-                , new SqlParameter("@pagenum", page));
-            
-            List<MeetMaintenanceModels> listRows=new List<MeetMaintenanceModels>();
-            
+            int totalrows = 0;
+
+            if (!string.IsNullOrEmpty(Request.QueryString["page"]))
+            {
+                page = Convert.ToInt16(Request.QueryString["page"]);
+            }
+            if (!string.IsNullOrEmpty(Request.QueryString["rows"]))
+            {
+                rows = Convert.ToInt16(Request.QueryString["rows"]);
+            }
+            countsql += meetsysid == "" ? "" : " and sys_id='" + meetsysid + "'";
+
+            List<MeetMaintenanceModels> listRows = new List<MeetMaintenanceModels>();
             List<AccountModels> listMasters = new List<AccountModels>();
             List<AccountModels> listJoins = new List<AccountModels>();
             List<AccountModels> listUnJoins = new List<AccountModels>();
             List<AccountModels> listShares = new List<AccountModels>();
             List<MeetListContent> listItems = new List<MeetListContent>();
 
-            if (sysid != "" && ds.Tables[0].Rows.Count > 0)
+            List<ListDetailModels> listActDetail = new List<ListDetailModels>();
+
+            try
             {
-                //加載主席
-                DataSet dsDetail = GetDataSet(sysid, LoadType.Master);
-                foreach (DataRow dr in dsDetail.Tables[0].Rows)
+                SqlDataReader sqldr = DBCommon.SqlHelper.ExecuteReader(DBCommon.SqlHelper.ConntionString, CommandType.Text, countsql);
+                while (sqldr.Read())
                 {
-                    listMasters.Add(new AccountModels()
-                    {
-                        UserId = dr["wor_num"].ToString(),
-                        FulName = dr["ful_name"].ToString()
-                    });
+                    totalrows = (int) sqldr["totalrows"];
                 }
 
-                //加載出席人員
-                dsDetail = GetDataSet(sysid, LoadType.Join);
-                foreach (DataRow dr in dsDetail.Tables[0].Rows)
+                DataSet ds = DBCommon.SqlHelper.ExecuteDataset(DBCommon.SqlHelper.ConntionString, CommandType.Text, execsql
+                    , new SqlParameter("@pagesize", rows)
+                    , new SqlParameter("@pagenum", page));
+
+                if (meetsysid != "" && ds.Tables[0].Rows.Count > 0)
                 {
-                    listJoins.Add(new AccountModels()
+                    //加載主席
+                    DataSet dsDetail = GetDataSet(meetsysid, LoadType.Master);
+
+                    foreach (DataRow dr in dsDetail.Tables[0].Rows)
                     {
-                        UserId = dr["wor_num"].ToString(),
-                        FulName = dr["ful_name"].ToString()
-                    });
+                        listMasters.Add(new AccountModels()
+                        {
+                            UserId = dr["wor_num"].ToString(),
+                            FulName = dr["ful_name"].ToString()
+                        });
+                    }
+
+                    //加載出席人員
+                    dsDetail = GetDataSet(meetsysid, LoadType.Join);
+                    foreach (DataRow dr in dsDetail.Tables[0].Rows)
+                    {
+                        listJoins.Add(new AccountModels()
+                        {
+                            UserId = dr["wor_num"].ToString(),
+                            FulName = dr["ful_name"].ToString()
+                        });
+                    }
+
+                    //加載缺席人員
+                    dsDetail = GetDataSet(meetsysid, LoadType.UnJoin);
+                    foreach (DataRow dr in dsDetail.Tables[0].Rows)
+                    {
+                        listUnJoins.Add(new AccountModels()
+                        {
+                            UserId = dr["wor_num"].ToString(),
+                            FulName = dr["ful_name"].ToString()
+                        });
+                    }
+
+                    //共享人員
+                    dsDetail = GetDataSet(meetsysid, LoadType.Share);
+                    foreach (DataRow dr in dsDetail.Tables[0].Rows)
+                    {
+                        listShares.Add(new AccountModels()
+                        {
+                            UserId = dr["wor_num"].ToString(),
+                            FulName = dr["ful_name"].ToString()
+                        });
+                    }
+
+                    //加載會議事項
+                    dsDetail = GetDataSet(meetsysid, LoadType.MeetList);
+                    foreach (DataRow dr in dsDetail.Tables[0].Rows)
+                    {
+
+                        //加載行動列表
+                        StringBuilder sb = new StringBuilder();
+                        sb.Append(
+                            "select act.sys_id ,act.mt_id ,act.list_id ,act.detail ,convert(varchar(10),rpt_dte,101) rpt_dte ,personid=(select person.wor_num+',' from tb_list_act_person person where person.act_id=act.sys_id for xml path(''))");
+                        sb.Append(
+                            ",personname=(select usr.ful_name+',' from tb_list_act_person person left join tb_user usr on person.wor_num=usr.wor_num where person.act_id=act.sys_id for xml path(''))");
+                        sb.Append("from tb_list_act act ");
+                        sb.Append("where act.mt_id=@mt_id");
+                        sb.Append(" and act.list_id=@list_id");
+
+                        DataSet dsActDetail = DBCommon.SqlHelper.ExecuteDataset(DBCommon.SqlHelper.ConntionString, CommandType.Text,
+                            sb.ToString()
+                            , new SqlParameter("mt_id", meetsysid)
+                            , new SqlParameter("list_id", dr["dtl_id"].ToString()));
+
+                        foreach (DataRow drAct in dsActDetail.Tables[0].Rows)
+                        {
+                            listActDetail.Add(new ListDetailModels()
+                            {
+                                Actcontent = drAct["detail"].ToString(),
+                                Actpersonid =
+                                    drAct["personid"].ToString().Substring(0, drAct["personid"].ToString().Length - 1),
+                                Rptdte = drAct["rpt_dte"].ToString(),
+                                Actpersonname =
+                                    drAct["personname"].ToString()
+                                        .Substring(0, drAct["personname"].ToString().Length - 1),
+                                Listsysid = dr["dtl_id"].ToString(),
+                                Meetsysid = meetsysid
+                            });
+                        }
+                        //********************
+
+                        listItems.Add(new MeetListContent()
+                        {
+                            content = dr["detail"].ToString(),
+                            listsysid = dr["dtl_id"].ToString(),
+                            meetsysid = dr["mt_id"].ToString(),
+                            title = dr["title"].ToString(),
+                            ActDetails = listActDetail
+                        });
+                    }
                 }
 
-                //加載缺席人員
-                dsDetail = GetDataSet(sysid, LoadType.UnJoin);
-                foreach (DataRow dr in dsDetail.Tables[0].Rows)
+                foreach (DataRow dr in ds.Tables[0].Rows)
                 {
-                    listUnJoins.Add(new AccountModels()
+                    listRows.Add(new MeetMaintenanceModels()
                     {
-                        UserId = dr["wor_num"].ToString(),
-                        FulName = dr["ful_name"].ToString()
+                        sysid = dr["sys_id"].ToString(),
+                        id = dr["mt_id"].ToString(),
+                        date = dr["mt_dte"].ToString(),
+                        time = dr["mt_time"].ToString(),
+                        addr = dr["addr"].ToString(),
+                        name = dr["title"].ToString(),
+                        listitems = listItems,
+                        listmasters = listMasters,
+                        listjoins = listJoins,
+                        listunjoins = listUnJoins,
+                        listsharelists = listShares
                     });
                 }
-
-                //共享人員
-                dsDetail = GetDataSet(sysid, LoadType.Share);
-                foreach (DataRow dr in dsDetail.Tables[0].Rows)
-                {
-                    listShares.Add(new AccountModels()
-                    {
-                        UserId = dr["wor_num"].ToString(),
-                        FulName = dr["ful_name"].ToString()
-                    });
-                }
-
-                //加載會議事項
-                dsDetail = GetDataSet(sysid, LoadType.MeetList);
-                foreach (DataRow dr in dsDetail.Tables[0].Rows)
-                {
-                    listItems.Add(new MeetListContent()
-                    {
-                        content = dr["detail"].ToString(),
-                        listsysid = dr["dtl_id"].ToString(),
-                        meetsysid = dr["mt_id"].ToString(),
-                        title = dr["title"].ToString()
-                    });
-                }
+                ret = true;
             }
-
-            foreach (DataRow dr in ds.Tables[0].Rows)
+            catch (Exception e)
             {
-                listRows.Add(new MeetMaintenanceModels()
-                {
-                    sysid = dr["sys_id"].ToString(),
-                    id = dr["mt_id"].ToString(),
-                    date = dr["mt_dte"].ToString(),
-                    time = dr["mt_time"].ToString(),
-                    addr = dr["addr"].ToString(),
-                    name = dr["title"].ToString(),
-                    listitems = listItems,
-                    listmasters = listMasters,
-                    listjoins = listJoins,
-                    listunjoins = listUnJoins,
-                    listsharelists = listShares
-                });
+                errmsg = e.Message;
+                //throw;
             }
-
-            return Json(new { total = 30, rows = listRows }, JsonRequestBehavior.AllowGet);
+            return Json(new {total = totalrows, rows = listRows, result = ret, errmsg = errmsg},
+                JsonRequestBehavior.AllowGet);
 
         }
 
@@ -176,11 +235,14 @@ namespace Sys_Meeting.Controllers
                 case LoadType.MeetList:
                     sql = "select dtl.mt_id,dtl.dtl_id,dtl.detail,lst.title from tb_meet_detail dtl left join tb_list lst on dtl.dtl_id=lst.sys_id where mt_id=@mt_id and is_del=0";
                     break;
+                case LoadType.ActDetail:
+                    sql = "";
+                    break;
                 default:
                     break;
             }
             
-            DataSet ds = SqlHelper.ExecuteDataset(DbCommon.GConnectionString, CommandType.Text, sql
+            DataSet ds = DBCommon.SqlHelper.ExecuteDataset(DBCommon.SqlHelper.ConntionString, CommandType.Text, sql
                 , new SqlParameter("@mt_id", id));
             return ds;
         }
@@ -235,7 +297,7 @@ namespace Sys_Meeting.Controllers
             string sMsg = "", retSuc="0";
             bool bResult= true;
 
-            SqlConnection conn=new SqlConnection(DbCommon.GConnectionString);
+            SqlConnection conn=new SqlConnection(DBCommon.SqlHelper.ConntionString);
             conn.Open();
 
             SqlTransaction tran = conn.BeginTransaction();
@@ -247,7 +309,7 @@ namespace Sys_Meeting.Controllers
                     "insert into tb_meet(sys_id,mt_id,title,mt_dte,mt_time,addr,create_by,last_ip,is_share)");
                 sbMeetSql.Append("values(@sys_id,@mt_id,@title,@mt_dte,@mt_time,@addr,@create_by,@last_ip,@is_share)");
 
-                int r1 = SqlHelper.ExecuteNonQuery(DbCommon.GConnectionString, CommandType.Text, sbMeetSql.ToString()
+                int r1 = DBCommon.SqlHelper.ExecuteNonQuery(DBCommon.SqlHelper.ConntionString, CommandType.Text, sbMeetSql.ToString()
                     , new SqlParameter("@sys_id", meetMaintenanceModels.sysid)
                     , new SqlParameter("@mt_id", meetMaintenanceModels.id)
                     , new SqlParameter("@title", meetMaintenanceModels.name)
@@ -298,13 +360,13 @@ namespace Sys_Meeting.Controllers
 
             string sysid = meetMaintenanceModels.sysid;// Request.RequestContext.RouteData.Values["id"].ToString();
             string sql = "select * from tb_meet where sys_id=@sys_id";
-            DataSet ds = SqlHelper.ExecuteDataset(DbCommon.GConnectionString, CommandType.Text, sql
+            DataSet ds = DBCommon.SqlHelper.ExecuteDataset(DBCommon.SqlHelper.ConntionString, CommandType.Text, sql
                 , new SqlParameter("@sys_id", meetMaintenanceModels.sysid));
 
             if (ds.Tables[0].Rows.Count > 0)
             {
                 SqlConnection conn=new SqlConnection();
-                conn.ConnectionString = DbCommon.GConnectionString;
+                conn.ConnectionString = DBCommon.SqlHelper.ConntionString;
                 conn.Open();
 
                 SqlTransaction sqlTransaction = conn.BeginTransaction();
@@ -313,18 +375,18 @@ namespace Sys_Meeting.Controllers
                 {
                     //刪除所有事項列表
                     sql = "delete from tb_meet_detail where mt_id=@mt_id";
-                    SqlHelper.ExecuteNonQuery(sqlTransaction, CommandType.Text, sql
+                    DBCommon.SqlHelper.ExecuteNonQuery(sqlTransaction, CommandType.Text, sql
                         , new SqlParameter("@mt_id", meetMaintenanceModels.sysid));
 
                     //刪除會議參與人員
                     sql = "delete from tb_meet_joinlist where mt_id=@mt_id and type in(0,1,2,3)";
-                    SqlHelper.ExecuteNonQuery(sqlTransaction, CommandType.Text, sql
+                    DBCommon.SqlHelper.ExecuteNonQuery(sqlTransaction, CommandType.Text, sql
                         , new SqlParameter("@mt_id", meetMaintenanceModels.sysid));
 
                     //更新tb_meet數據
                     sql =
                         "update tb_meet set mt_dte=@mt_dte,mt_time=@mt_time,addr=@addr,title=@title,modi_by=@modi_by,modi_dte=getdate(),last_ip=@last_ip where sys_id=@sys_id and is_del=0";
-                    SqlHelper.ExecuteNonQuery(sqlTransaction, CommandType.Text, sql
+                    DBCommon.SqlHelper.ExecuteNonQuery(sqlTransaction, CommandType.Text, sql
                         , new SqlParameter("@sys_id", meetMaintenanceModels.sysid)
                         , new SqlParameter("@mt_dte", meetMaintenanceModels.date)
                         , new SqlParameter("@mt_time", meetMaintenanceModels.time)
@@ -380,7 +442,7 @@ namespace Sys_Meeting.Controllers
             
             try
             {
-                retSuc = SqlHelper.ExecuteNonQuery(DbCommon.GConnectionString, CommandType.Text, sql
+                retSuc = DBCommon.SqlHelper.ExecuteNonQuery(DBCommon.SqlHelper.ConntionString, CommandType.Text, sql
                                 , new SqlParameter("@sys_id", sysid)
                                 ,new SqlParameter("@del_by",Session["userid"])
                                 ,new SqlParameter("@last_ip",GetIP()));
@@ -457,7 +519,7 @@ namespace Sys_Meeting.Controllers
                     dt.Rows.Add(r);
                 }
 
-                retval=DbCommon.BulkToDB(sqlConnection, sqlTransaction, dt, "tb_meet_joinlist", out errMsg);
+                retval=DBCommon.SqlHelper.BulkToDb(sqlConnection, sqlTransaction, dt, "tb_meet_joinlist", out errMsg);
                 
                 //-->插入tb_meet_detail的數據
                 dt = new DataTable();
@@ -478,7 +540,7 @@ namespace Sys_Meeting.Controllers
                     dt.Rows.Add(r);
                 }
 
-                retval=DbCommon.BulkToDB(sqlConnection,sqlTransaction ,dt, "tb_meet_detail",out errMsg);
+                retval=DBCommon.SqlHelper.BulkToDb(sqlConnection,sqlTransaction ,dt, "tb_meet_detail",out errMsg);
                 
                 //--<
 
@@ -489,7 +551,7 @@ namespace Sys_Meeting.Controllers
             catch (Exception e)
             {
                 errMsg = e.Message;
-                throw e;
+                throw;
                 //return false;
             }
             return retval;

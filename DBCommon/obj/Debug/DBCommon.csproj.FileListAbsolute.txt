@@ -1,0 +1,4 @@
+D:\SysMeeting\Sys_Meeting\DBCommon\bin\Debug\DBCommon.dll
+D:\SysMeeting\Sys_Meeting\DBCommon\bin\Debug\DBCommon.pdb
+D:\SysMeeting\Sys_Meeting\DBCommon\obj\Debug\DBCommon.dll
+D:\SysMeeting\Sys_Meeting\DBCommon\obj\Debug\DBCommon.pdb

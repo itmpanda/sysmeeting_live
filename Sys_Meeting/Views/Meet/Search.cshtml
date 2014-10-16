@@ -1,0 +1,332 @@
+﻿@model Sys_Meeting.Models.SearchMeetModels
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Search</title>
+    <link rel="shortcut icon" href="../../Content/favicon.ico" type="image/x-icon" />
+    <link href="../../Content/jquery-plugin/themes/icon.css" rel="stylesheet" type="text/css" />
+
+    <script src="~/Scripts/jquery-1.7.1.min.js"></script>
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.min.js" type="text/javascript"></script>
+
+    <link href="../../Content/jquery-plugin/themes/metro/easyui.css" rel="stylesheet"
+          type="text/css" />
+    <link href="../../Content/jquery-plugin/demo/demo.css" rel="stylesheet" type="text/css" />
+    <script src="http://localhost:52711/Content/jquery-plugin/jquery.form.js" type="text/javascript"></script>
+    
+    <script src="../../Content/jquery-plugin/jquery.easyui.min.js" type="text/javascript"></script>
+    <script src="../../Content/jquery-plugin/locale/easyui-lang-zh_TW.js" type="text/javascript"></script>
+    <script src="../../Content/js/CommonAction.js" type="text/javascript"></script>
+    <script src="../../Content/js/HttpAction.js" type="text/javascript"></script>
+</head>
+<body>
+    @using (Ajax.BeginForm("searchmeet", "meet", new AjaxOptions { HttpMethod = "GET", InsertionMode = InsertionMode.InsertBefore,UpdateTargetId = "returndata" }, new { method = "GET", id = "form-list" }))
+    {
+        @Html.ValidationSummary(true)
+        <div id="returndata"></div>
+        @*<fieldset>
+            <legend>會議記錄查詢</legend>*@
+    
+            <div class="editor-label">
+                @Html.LabelFor(model => model.Keywords)
+            </div>
+            <div class="editor-field">
+                @Html.EditorFor(model => model.Keywords)<label>多個關鍵字可用英文","號分隔.</label>
+                @Html.ValidationMessageFor(model => model.Keywords)
+            </div>
+    
+            <div class="editor-label" style="display: none">
+                @Html.LabelFor(model => model.Listfrom)
+            </div>
+            <div class="editor-field" style="display: none">
+                @Html.EditorFor(model => model.Listfrom)
+                @Html.ValidationMessageFor(model => model.Listfrom)
+                
+                @Html.LabelFor(model => model.Listto)
+                @Html.EditorFor(model => model.Listto)
+                @Html.ValidationMessageFor(model => model.Listto)
+            </div>
+    
+            
+
+            <div class="editor-label">
+                @Html.LabelFor(model => model.Meetdatefrom)
+            </div>
+            <div class="editor-field">
+                @Html.EditorFor(model => model.Meetdatefrom)
+                @Html.ValidationMessageFor(model => model.Meetdatefrom)
+                
+                @Html.LabelFor(model => model.Meetdateto)
+                @Html.EditorFor(model => model.Meetdateto)
+                @Html.ValidationMessageFor(model => model.Meetdateto)
+            </div>
+            
+            <p>
+                <input type="button" id="btn-search" value="搜索" />
+            </p>
+        @*</fieldset>*@
+        
+    }
+    <div id="div-list-panels" class="easyui-accordion"></div>
+    <div id="div-dailog-edit" style="display: none">
+        <table>
+            <tr>
+                <th>報告日期：</th><td><input type="text" id="txtrptdte"/></td>
+            </tr>
+            <tr>
+                <th>負責人：</th>
+                <td>
+                    <input type="text" id="txtactperson" readonly="readonly"/><input type="hidden" id="txtactperson_f" readonly="readonly"/>
+                    <a href="javascript:void(0)" class="easyui-linkbutton" iconcls="icon-search" id="open-search"></a>
+                </td>
+            </tr>
+            <tr>
+                <th>行動：</th><td><textarea id="txtactcontent" cols="30" rows="4"></textarea></td>
+            </tr>
+                
+        </table>
+    </div>
+    
+    <div id="div-dailog-search" style="display: none"></div>
+
+    <script type="text/javascript">
+        var btnNew = '<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-add" id="btn-new">添加</a>';
+        var btnEdit = '<a href="javascript:void(0)" class="btn-edit">';
+        btnEdit += '<span class="l-btn-left l-btn-icon-left">';
+        btnEdit += '<span class="l-btn-text"></span>';
+        btnEdit += '<span class="l-btn-icon icon-edit"></span>';
+        btnEdit += '</span>';
+        btnEdit += '</a>';
+
+        var btnDel = '<a href="javascript:void(0)" class="btn-del">';
+        btnDel += '<span class="l-btn-left l-btn-icon-left">';
+        btnDel += '<span class="l-btn-text"></span>';
+        btnDel += '<span class="l-btn-icon icon-remove"></span>';
+        btnDel += '</span>';
+        btnDel += '</a>';
+
+        var btnSave = '<a href="javascript:void(0)" class="btn-save">';
+        btnSave += '<span class="l-btn-left l-btn-icon-left">';
+        btnSave += '<span class="l-btn-text">保存</span>';
+        btnSave += '<span class="l-btn-icon icon-save"></span>';
+        btnSave += '</span>';
+        btnSave += '</a>';
+
+        $('#btn-search').click(function() {
+            $('#form-list').ajaxSubmit(function (ret) {
+                if (!ret.result) {
+                    $.messager.alert('提示', ret.errmsg, 'info',function() {
+                        return;
+                    });
+                }
+                removeAllPanel();
+                loadlist(ret);
+            });
+        });
+
+        $(document).delegate('#btn-new', 'click', function () {
+            var td = '<tr><td style="display:none"></td><td></td><td></td><td></td><td>' + btnEdit + '|' + btnDel + '</td></tr>';
+            $(this).parent().parent().parent().parent().append(td);
+        });
+
+        $(document).delegate('.btn-del', 'click', function () {
+            $(this).parents('tr').remove();
+        });
+
+        $(document).delegate('.btn-edit', 'click', function () {
+
+            ClearActionModels();
+
+            var oCols = $(this).parent().parent().children('td'); //.eq(0).text()  ;
+
+            $('#txtactperson_f').val(oCols.eq(0).text());
+            $('#txtactperson').val(oCols.eq(1).text());
+            $('#txtactcontent').val(oCols.eq(2).text());
+            $('#txtrptdte').val(oCols.eq(3).text());
+
+            openDailog('#div-dailog-edit', '編輯', function (data) {
+                if (data == 'save') {
+
+                    var o = new ActionModels();
+
+                    oCols.eq(0).text(o.actpersonid);
+                    oCols.eq(1).text(o.actperson);
+                    oCols.eq(2).html(o.actcontent);
+                    oCols.eq(3).text(o.rptdte);
+
+                }
+                $('#div-dailog-edit').dialog('close');
+            });
+        });
+
+        $('#open-search').click(function () {
+            var title = '選擇負責人', url = '/account/search';
+            var c = 'txtactperson';
+            OpenSearchDailog('#div-dailog-search', title, url, function (ret) {
+                if (ret == 'select') {
+                    var rows = $('#dgSearch').datagrid('getSelections');
+                    var id = [], name = [];
+                    for (var i = 0; i < rows.length; i++) {
+                        var row = rows[i];
+                        id.push(row[PushFieldValue('account', 'id')]);
+                        name.push(row[PushFieldValue('account', 'name')]);
+                    }
+
+                    $('#' + c).val(name.join(','));
+                    $('#' + c + '_f').val(id.join(','));
+                }
+
+                CloseDialog('#div-dailog-search');
+
+            });
+        });
+
+        $(document).delegate('.btn-save', 'click', function() {
+            var listsysid = $(this).parents('#listdetail').data('listsysid');
+            var meetsysid = $(this).parents('#listdetail').data('meetsysid');
+
+            var alistdetails = new Array();
+            var savemodel = {};
+
+            savemodel.Meetsysid = meetsysid;
+            savemodel.Listsysid = listsysid;
+
+            $(this).parents('table').find('tbody tr').each(function() {
+                var oCols = $(this).children('td');
+                var listdetail = {};
+                listdetail.Actpersonid = oCols.eq(0).text();
+                listdetail.Actcontent = oCols.eq(2).text();
+                listdetail.Rptdte = oCols.eq(3).text();
+                alistdetails.push(listdetail);
+            });
+            savemodel.values = alistdetails;
+
+            PostRequest('/meetfinish/saveactdetail', savemodel, function (ret) {
+                if (ret.result) {
+                    $.messager.alert('提示', '保存成功', 'info');
+                } else {
+                    $.messager.alert('提示', ret.errmsg, 'info');
+                }
+            });
+        });
+
+        function loadlist(data) {
+            var ipos;
+            var t = [], d5 = [];
+            t = data.rows;
+
+            var actdetail = [];
+
+//            for (var i = 0; i < t.length; i++) {
+//                var t2 = t[i];
+
+            //d5 = t2.listitems; //事項列表
+            d5 = data.rows;
+
+            //事項列表
+            for (ipos = 0; ipos < d5.length; ipos++) {
+                var listdetail = d5[ipos];
+                var acontent = listdetail.content.split('\n');
+
+                var actcontent = '';
+                var content = '<div style="padding:1px;overflow:auto;" id="listdetail" data-listsysid="' + listdetail.listsysid + '" data-meetsysid="' + listdetail.meetsysid + '">' + acontent.join('</br>');
+                content += '<hr/>';
+                content += '<table class="bordered" width=100%>';
+                content += '<thead>';
+                content += '<tr>';
+                content += '<th style="display:none">actid</th>';
+                content += '<th>負責人</th>';
+                content += '<th width=50%>行動</th>';
+                content += '<th>報告日期</th>';
+                content += '<th>' + btnNew + ' ' + btnSave + '</th>'; // '<th><a href="javascript:void(0)" id="btn-new">操作</a></th>';
+                content += '</tr>';
+                content += '</thead>';
+                content += '<tbody>';
+
+                //行動事項
+                actdetail = listdetail.ActDetails;
+                for (var j = 0; j < actdetail.length; j++) {
+                    var actdtl = actdetail[j];
+                    if (listdetail.listsysid == actdtl.Listsysid) {
+
+                        actcontent += '<tr><td style="display:none">' + actdtl.Actpersonid + '</td><td>' + actdtl.Actpersonname + '</td><td>' + actdtl.Actcontent + '</td><td>' + actdtl.Rptdte + '</td><td>' + btnEdit + '|' + btnDel + '</td></tr>';
+
+                    }
+                }
+                content += actcontent;
+                content += '</tbody>';
+                content += '</table>';
+                content += '</div>';
+
+                $('#div-list-panels').accordion('add', {
+                    title: listdetail.title,
+                    content: content
+                });
+
+                //*******************
+            }
+//            }
+        }
+        function removeAllPanel() {
+            //removeAllPanel('.div-list-panels');
+            $('#div-list-panels .panel .panel-title').each(function () {
+                $('#div-list-panels').accordion('remove', $(this).html());
+            });
+        }
+        function ActionModels() {
+            var self = this;
+
+            self.actpersonid = $('#txtactperson_f').val();
+            self.actperson = $('#txtactperson').val();
+            self.actcontent = $('#txtactcontent').val().replace('/\n/g', '<br/>');
+            self.rptdte = $('#txtrptdte').val();
+
+            //alert(self.actcontent);
+        }
+
+        function ClearActionModels() {
+            var self = this;
+
+            self.actpersonid = '';
+            self.actperson = '';
+            self.actcontent = '';
+            self.rptdte = '';
+
+            $('#txtactperson_f').val('');
+            $('#txtactperson').val('');
+            $('#txtactcontent').val('');
+            $('#txtrptdte').val('');
+        }
+
+        //從返回的表格行數中設置文本的值
+        //rows:表格行數數組
+        function SetDGSelections(rows, t) {
+            var f1 = '', f2 = '';
+
+            //                if (t == 'list') {
+            //                    f1 = rows.ListName;
+            //                    f2 = rows.ListSysId;
+            //                }
+            //                else if (t == 'account') {
+
+            f1 = rows.FulName;
+            f2 = rows.UserId;
+            //                }
+
+            $('#txtactperson').val(f1);
+            $('#txtactperson' + '_f').val(f2);
+
+            CloseDialog('#div-dailog-search');
+        }
+
+    </script>
+</body>
+</html>

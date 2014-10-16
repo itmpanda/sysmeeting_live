@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sys_Meeting", "Sys_Meeting\Sys_Meeting.csproj", "{A7517C99-E384-416D-AB24-47B5F746CFFD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DBCommon", "DBCommon\DBCommon.csproj", "{EF1561A6-60EC-4C0B-8607-395D6E38A6B5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -13,6 +15,10 @@ Global
 		{A7517C99-E384-416D-AB24-47B5F746CFFD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A7517C99-E384-416D-AB24-47B5F746CFFD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A7517C99-E384-416D-AB24-47B5F746CFFD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EF1561A6-60EC-4C0B-8607-395D6E38A6B5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EF1561A6-60EC-4C0B-8607-395D6E38A6B5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EF1561A6-60EC-4C0B-8607-395D6E38A6B5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EF1561A6-60EC-4C0B-8607-395D6E38A6B5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

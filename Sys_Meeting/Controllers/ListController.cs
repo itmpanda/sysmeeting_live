@@ -5,7 +5,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-using Sys_Meeting.generalHandler;
+using DBCommon;
 using Sys_Meeting.Models;
 
 namespace Sys_Meeting.Controllers
@@ -23,12 +23,13 @@ namespace Sys_Meeting.Controllers
         }
 
         public ActionResult Search()
-        {
+        {   
+            
             string sql = "";
-            sql = DbCommon.GetPageSql("tb_list", "sys_id ,list_id ,title", "sys_id");
-            DataSet ds = SqlHelper.ExecuteDataset(DbCommon.GConnectionString, CommandType.Text, sql
+            sql = DBCommon.SqlHelper.GetPageSql("tb_list", "sys_id ,list_id ,title", "sys_id");
+            DataSet ds = DBCommon.SqlHelper.ExecuteDataset(DBCommon.SqlHelper.ConntionString, CommandType.Text, sql
                 , new SqlParameter("@pagenum", 1)
-                , new SqlParameter("@pagesize", DbCommon.GetPageSize));
+                , new SqlParameter("@pagesize", SqlHelper.GetPageSize));
 
             List<MeetListModels> listRows =new List<MeetListModels>();
             foreach (DataRow dr in ds.Tables[0].Rows)
